@@ -12,6 +12,48 @@ def test_client():
     assert response.status_code == 200
     assert response.json['message'] == "Hello, World!"
 
+def test_exp_index():
+    '''
+    Check if the index of new experience is correct in the list
+    '''
+
+    exp1 = {
+        "title": "Software Developer",
+        "company": "A Cooler Company",
+        "start_date": "October 2022",
+        "end_date": "Present",
+        "description": "Writing JavaScript Code",
+        "logo": "example-logo.png"
+    }
+
+    exp2 = {
+        "title": "Accountant",
+        "company": "My Company",
+        "start_date": "October 2019",
+        "end_date": "Present",
+        "description": "Filing Taxes",
+        "logo": "example-logo.png"
+    }
+
+    exp3 = {
+        "title": "Lawyer",
+        "company": "A Cool Firm",
+        "start_date": "October 2020",
+        "end_date": "Present",
+        "description": "Case Studies",
+        "logo": "example-logo.png"
+    }
+
+    ind1 = app.test_client().post('/resume/experience',
+                                  json=exp1).json['id']
+    ind2 = app.test_client().post('/resume/experience',
+                                  json=exp2).json['id']
+    ind3 = app.test_client().post('/resume/experience',
+                                  json=exp3).json['id']
+    assert ind1 == 1
+    assert ind2 == 2
+    assert ind3 == 3
+
 
 def test_experience():
     '''
