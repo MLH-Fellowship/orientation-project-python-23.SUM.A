@@ -118,10 +118,10 @@ def skill():
         if index is not None:
             index = int(index)
             if 0 <= index < len(data["skill"]) - 1:
-                ski = data["skill"][index]
-                return jsonify({"name": ski.name,
-                                "proficiency": ski.proficiency,
-                                "logo": ski.logo,
+                skill = data["skill"][index]
+                return jsonify({"name": skill.name,
+                                "proficiency": skill.proficiency,
+                                "logo": skill.logo,
                                 })
         return jsonify(data["skill"])
 
