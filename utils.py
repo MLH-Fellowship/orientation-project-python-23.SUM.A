@@ -48,3 +48,13 @@ def get_skill_by_index(data, index):
                         "logo": target_skill.logo,
                         })
     return jsonify({"Server Error": "Couldn't find needed skill"})
+
+def delete_skill_by_index(data, index):
+    '''
+    Delete specific skill by index or None if not found
+    '''
+    index = int(index)
+    if 0 <= index < len(data["skill"]):
+        del data["skill"][index]
+        return jsonify({"Success": "Skill deleted"})
+    return jsonify({"Server Error": "Couldn't find needed skill"})

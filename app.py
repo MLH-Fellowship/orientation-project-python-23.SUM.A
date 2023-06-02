@@ -3,7 +3,7 @@ Flask Application
 '''
 from flask import Flask, jsonify, request
 from models import Experience, Education, Skill
-from utils import get_experience_by_index, get_education_by_index, get_skill_by_index
+from utils import get_experience_by_index, get_education_by_index, get_skill_by_index, delete_skill_by_index
 
 app = Flask(__name__)
 
@@ -93,7 +93,7 @@ def education():
     return jsonify({"Server Error": "Couldn't process method"})
 
 
-@app.route('/resume/skill', methods=['GET', 'POST'])
+@app.route('/resume/skill', methods=['GET', 'POST', 'DELETE'])
 def skill():
     '''
     Handles Skill requests
@@ -113,4 +113,8 @@ def skill():
 
         data["skill"].append(new)
         return jsonify({"id": data["skill"].index(new)})
+    if request.method == 'DELETE':
+        index = request.args.get("index")
+        if index is not None:
+            return delete_skill_by_index(data, index)
     return jsonify({"Server Error": "Couldn't process method"})
