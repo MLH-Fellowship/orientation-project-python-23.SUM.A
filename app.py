@@ -106,11 +106,24 @@ def skill():
 
     if request.method == 'POST':
         req = request.get_json()
-        new = Skill(req["name"],
-            req["proficiency"],
-            req["logo"]
-        )
 
+        if not isinstance(req, dict):
+            return jsonify({"error": "Request data is not valid JSON"}), 400
+
+        required_fields = ["name", "proficiency", "logo"]
+        missing_fields = [field for field in required_fields if field not in req]
+
+        if missing_fields:
+            return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
+
+        # Validate fields types
+        if not isinstance(req["name"], str) or \
+        not isinstance(req["proficiency"], str) or \
+        not isinstance(req["logo"], str):
+            return jsonify({"error": "Some fields have incorrect type"}), 400
+
+        new = Skill(req["name"], req["proficiency"], req["logo"])
         data["skill"].append(new)
+
         return jsonify({"id": data["skill"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})

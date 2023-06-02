@@ -123,3 +123,22 @@ def test_skill():
 
     response = app.test_client().get('/resume/skill')
     assert response.json[item_id] == example_skill
+
+    incomplete_skill = {
+        "name": "JavaScript",
+        "logo": "example-logo.png"
+    }
+
+    response = app.test_client().post('/resume/skill', json=incomplete_skill)
+    assert response.status_code == 400
+    assert "Missing fields" in response.json['error']
+
+    invalid_skill = {
+        "name": "JavaScript",
+        "proficiency": 123,  # not a string
+        "logo": "example-logo.png"
+    }
+
+    response = app.test_client().post('/resume/skill', json=invalid_skill)
+    assert response.status_code == 400
+    assert "Some fields have incorrect type" in response.json['error']
