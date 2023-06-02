@@ -12,6 +12,7 @@ def test_client():
     assert response.status_code == 200
     assert response.json['message'] == "Hello, World!"
 
+
 def test_exp_index():
     '''
     Check if the index of new experience is correct in the list
@@ -50,9 +51,17 @@ def test_exp_index():
                                   json=exp2).json['id']
     ind3 = app.test_client().post('/resume/experience',
                                   json=exp3).json['id']
+
+    # check if the correct index is returned
     assert ind1 == 1
     assert ind2 == 2
     assert ind3 == 3
+
+    # check if GET request with index gives the same JSON
+    response = app.test_client().get('/resume/experience')
+    assert response.json[ind1] == exp1
+    assert response.json[ind2] == exp2
+    assert response.json[ind3] == exp3
 
 
 def test_experience():
