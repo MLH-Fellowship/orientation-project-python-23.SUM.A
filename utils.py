@@ -29,9 +29,9 @@ def get_education_by_index(data, index):
 def get_skill_by_index(data, index):
     index = int(index)
     if 0 <= index < len(data["skill"]):
-        skill = data["skill"][index]
-        return jsonify({"name": skill.name,
-                        "proficiency": skill.proficiency,
-                        "logo": skill.logo,
+        target_skill = data["skill"][index]
+        return jsonify({"name": target_skill.name,
+                        "proficiency": target_skill.proficiency,
+                        "logo": target_skill.logo,
                         })
     return None
