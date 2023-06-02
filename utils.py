@@ -18,7 +18,7 @@ def get_experience_by_index(data, index):
                         "description": exp.description,
                         "logo": exp.logo,
                         })
-    return None
+    return jsonify({"Server Error": "Couldn't find needed experience"})
 
 def get_education_by_index(data, index):
     '''
@@ -34,7 +34,7 @@ def get_education_by_index(data, index):
                         "grade": edu.grade,
                         "logo": edu.logo,
                         })
-    return None
+    return jsonify({"Server Error": "Couldn't find needed education"})
 
 def get_skill_by_index(data, index):
     '''
@@ -47,4 +47,4 @@ def get_skill_by_index(data, index):
                         "proficiency": target_skill.proficiency,
                         "logo": target_skill.logo,
                         })
-    return None
+    return jsonify({"Server Error": "Couldn't find needed skill"})
