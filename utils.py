@@ -1,6 +1,13 @@
+'''
+Utils file which separates the logic from the app.py router file
+'''
+
 from flask import jsonify
 
 def get_experience_by_index(data, index):
+    '''
+    Return specific experience by index or None if not found
+    '''
     index = int(index)
     if 0 <= index < len(data["experience"]):
         exp = data["experience"][index]
@@ -14,6 +21,9 @@ def get_experience_by_index(data, index):
     return None
 
 def get_education_by_index(data, index):
+    '''
+    Return specific education by index or None if not found
+    '''
     index = int(index)
     if 0 <= index < len(data["education"]):
         edu = data["education"][index]
@@ -27,6 +37,9 @@ def get_education_by_index(data, index):
     return None
 
 def get_skill_by_index(data, index):
+    '''
+    Return specific skill by index or None if not found
+    '''
     index = int(index)
     if 0 <= index < len(data["skill"]):
         skill = data["skill"][index]
