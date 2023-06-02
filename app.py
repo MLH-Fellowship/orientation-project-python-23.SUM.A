@@ -72,7 +72,7 @@ def experience():
 
         data["experience"].append(new)
         return jsonify({"id": data["experience"].index(new)})
-    return jsonify({})
+    return jsonify({"Server Error": "Couldn't process method"})
 
 
 @app.route('/resume/education', methods=['GET', 'POST'])
@@ -107,7 +107,7 @@ def education():
 
         data["education"].append(new)
         return jsonify({"id": data["education"].index(new)})
-    return jsonify({})
+    return jsonify({"Server Error": "Couldn't process method"})
 
 
 @app.route('/resume/skill', methods=['GET', 'POST'])
@@ -136,4 +136,4 @@ def skill():
 
         data["skill"].append(new)
         return jsonify({"id": data["skill"].index(new)})
-    return jsonify({})
+    return jsonify({"Server Error": "Couldn't process method"})
