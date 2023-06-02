@@ -75,7 +75,9 @@ def experience():
         not isinstance(req["description"], str):
             err_message = "Some fields have incorrect type"
             code = 400
-        elif not isinstance(req["logo"], str): # I had to do this to pass the linter... R0916: Too many boolean expressions in if statement (6/5) (too-many-boolean-expressions)
+        # I had to do this to pass the linter
+        # R0916: Too many boolean expressions in if statement (6/5) (too-many-boolean-expressions)
+        elif not isinstance(req["logo"], str):
             err_message = "Some fields have incorrect type"
             code = 400
 
