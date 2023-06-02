@@ -105,6 +105,31 @@ def test_education():
     response = app.test_client().get('/resume/education')
     assert response.json[item_id] == example_education
 
+    incomplete_education = {
+        "course": "Engineering",
+        "school": "NYU",
+        "start_date": "October 2022",
+        "end_date": "August 2024",
+        "logo": "example-logo.png"
+    }
+
+    response = app.test_client().post('/resume/education', json=incomplete_education)
+    assert response.status_code == 400
+    assert "Missing fields" in response.json['error']
+
+    invalid_education = {
+        "course": "Engineering",
+        "school": "NYU",
+        "start_date": 1685732137, #Epoch for example
+        "end_date": "August 2024",
+        "grade": "86%",
+        "logo": "example-logo.png"
+    }
+
+    response = app.test_client().post('/resume/education', json=invalid_education)
+    assert response.status_code == 400
+    assert "Some fields have incorrect type" in response.json['error']
+
 
 def test_skill():
     '''

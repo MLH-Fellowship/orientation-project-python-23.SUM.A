@@ -80,6 +80,24 @@ def education():
 
     if request.method == 'POST':
         req = request.get_json()
+
+        if not isinstance(req, dict):
+            return jsonify({"error": "Request data is not valid JSON"}), 400
+
+        required_fields = ["school", "start_date", "end_date", "grade", "logo"]
+        missing_fields = [field for field in required_fields if field not in req]
+
+        if missing_fields:
+            return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
+
+        # Validate fields types
+        if not isinstance(req["school"], str) or \
+        not isinstance(req["start_date"], str) or \
+        not isinstance(req["end_date"], str) or \
+        not isinstance(req["grade"], str) or \
+        not isinstance(req["logo"], str):
+            return jsonify({"error": "Some fields have incorrect type"}), 400
+
         new = Education(req["course"],
             req["school"],
             req["start_date"],
@@ -87,8 +105,8 @@ def education():
             req["grade"],
             req["logo"]
         )
-
         data["education"].append(new)
+
         return jsonify({"id": data["education"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
 
