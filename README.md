@@ -2,6 +2,14 @@
 
 Refer to the Fellowship LMS for information!
 
+## File Structure
+
+The repository is structured as follows:
+
+- `app.py`: This file contains the main application code and defines the routers for handling different HTTP endpoints. It acts as the entry point for the web application.
+
+- `utils.py`: This file contains the utility functions and logic used by the web application. It provides various helper functions for data processing, or any other supporting functionality required by the application.
+
 ## Setup
 
 ```
