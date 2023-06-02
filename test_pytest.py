@@ -63,6 +63,32 @@ def test_exp_index():
     assert response.json[ind2] == exp2
     assert response.json[ind3] == exp3
 
+    # check if POST request body has all the required fields and correct types
+    incomplete_experience = {
+        "title": "Lawyer",
+        "company": "A Cool Firm",
+        "start_date": "October 2020",
+        "end_date": "Present",
+        "description": "Case Studies"
+    }
+
+    response = app.test_client().post('/resume/experience', json=incomplete_experience)
+    assert response.status_code == 400
+    assert "Missing fields" in response.json['error']
+
+    invalid_experience = {
+        "title": "Lawyer",
+        "company": "A Cool Firm",
+        "start_date": 1685732137, #Epoch for example
+        "end_date": "August 2024",
+        "description": "Case Studies",
+        "logo": "example-logo.png"
+    }
+
+    response = app.test_client().post('/resume/experience', json=invalid_experience)
+    assert response.status_code == 400
+    assert "Some fields have incorrect type" in response.json['error']
+
 
 def test_experience():
     '''
