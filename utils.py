@@ -11,6 +11,7 @@ def get_experience_by_index(data, index):
                         "description": exp.description,
                         "logo": exp.logo,
                         })
+    return None
 
 def get_education_by_index(data, index):
     index = int(index)
@@ -23,6 +24,7 @@ def get_education_by_index(data, index):
                         "grade": edu.grade,
                         "logo": edu.logo,
                         })
+    return None
 
 def get_skill_by_index(data, index):
     index = int(index)
@@ -32,3 +34,4 @@ def get_skill_by_index(data, index):
                         "proficiency": skill.proficiency,
                         "logo": skill.logo,
                         })
+    return None
