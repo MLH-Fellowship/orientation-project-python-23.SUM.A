@@ -127,3 +127,4 @@ def test_skill():
     correct_response = {"Success": "Skill deleted"}
     response = app.test_client().delete('/resume/skill', query_string={'index': item_id})
     assert response.json == correct_response
+    

@@ -3,7 +3,12 @@ Flask Application
 '''
 from flask import Flask, jsonify, request
 from models import Experience, Education, Skill
-from utils import get_experience_by_index, get_education_by_index, get_skill_by_index, delete_skill_by_index
+from utils import (
+    get_experience_by_index,
+    get_education_by_index,
+    get_skill_by_index,
+    delete_skill_by_index
+)
 
 app = Flask(__name__)
 
