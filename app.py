@@ -2,9 +2,9 @@
 Flask Application
 '''
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from models import Experience, Education, Skill
 from utils import get_experience_by_index, get_education_by_index, get_skill_by_index
-from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
