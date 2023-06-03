@@ -3,7 +3,7 @@ Flask Application
 '''
 from flask import Flask, jsonify, request
 from models import Experience, Education, Skill
-from utils import get_experience_by_index, get_education_by_index, get_skill_by_index
+from utils import get_experience_by_index, get_education_by_index, get_skill_by_index, spell_check
 
 app = Flask(__name__)
 
@@ -63,6 +63,12 @@ def experience():
         )
 
         data["experience"].append(new)
+
+        # Perform spell check on the new experience object
+        corrections = spell_check(data, "experience")
+        if corrections is not None:
+            return jsonify(corrections)
+        
         return jsonify({"id": data["experience"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
 
@@ -89,6 +95,12 @@ def education():
         )
 
         data["education"].append(new)
+
+        # Perform spell check on the new education object
+        corrections = spell_check(data, "education")
+        if corrections is not None:
+            return jsonify(corrections)
+        
         return jsonify({"id": data["education"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
 
@@ -112,5 +124,11 @@ def skill():
         )
 
         data["skill"].append(new)
+
+        # Perform spell check on the new skill object
+        corrections = spell_check(data, "skill")
+        if corrections is not None:
+            return jsonify(corrections)
+        
         return jsonify({"id": data["skill"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
