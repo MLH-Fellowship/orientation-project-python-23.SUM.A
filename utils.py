@@ -64,6 +64,10 @@ def spell_check(data):
             misspelled = spell.unknown(words)
 
             for word in misspelled:
+                # Skip words that contain numbers
+                if any(char.isdigit() for char in word):
+                    continue
+                
                 corrected_word = spell.correction(word)
                 corrections.append({"before": word, "after": corrected_word})
 
