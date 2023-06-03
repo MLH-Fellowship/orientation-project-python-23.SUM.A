@@ -66,7 +66,7 @@ def experience():
 
         # Perform spell check on the new experience object
         corrections = spell_check(data, "experience")
-        if corrections is not None:
+        if corrections:
             return jsonify(corrections)
         
         return jsonify({"id": data["experience"].index(new)})
@@ -98,7 +98,7 @@ def education():
 
         # Perform spell check on the new education object
         corrections = spell_check(data, "education")
-        if corrections is not None:
+        if corrections:
             return jsonify(corrections)
         
         return jsonify({"id": data["education"].index(new)})
@@ -127,7 +127,7 @@ def skill():
 
         # Perform spell check on the new skill object
         corrections = spell_check(data, "skill")
-        if corrections is not None:
+        if corrections:
             return jsonify(corrections)
         
         return jsonify({"id": data["skill"].index(new)})
