@@ -65,10 +65,9 @@ def experience():
         data["experience"].append(new)
 
         # Perform spell check on the new experience object
-        corrections = spell_check(data, "experience")
+        corrections = spell_check(data["experience"])
         if corrections:
             return jsonify(corrections)
-        
         return jsonify({"id": data["experience"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
 
@@ -97,10 +96,9 @@ def education():
         data["education"].append(new)
 
         # Perform spell check on the new education object
-        corrections = spell_check(data, "education")
+        corrections = spell_check(data["education"])
         if corrections:
             return jsonify(corrections)
-        
         return jsonify({"id": data["education"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
 
@@ -126,9 +124,8 @@ def skill():
         data["skill"].append(new)
 
         # Perform spell check on the new skill object
-        corrections = spell_check(data, "skill")
+        corrections = spell_check(data[skill])
         if corrections:
             return jsonify(corrections)
-        
         return jsonify({"id": data["skill"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
