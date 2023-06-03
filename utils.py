@@ -3,6 +3,7 @@ Utils file which separates the logic from the app.py router file
 '''
 
 from flask import jsonify
+from spellchecker import SpellChecker
 
 def get_experience_by_index(data, index):
     '''
@@ -48,3 +49,22 @@ def get_skill_by_index(data, index):
                         "logo": target_skill.logo,
                         })
     return jsonify({"Server Error": "Couldn't find needed skill"})
+
+
+def spell_check(data, section):
+    spell = SpellChecker()
+    corrections = []
+
+    for attr in data[section]:
+        for key, value in vars(attr).items():
+            if key == 'logo':
+                continue
+
+            words = value.split()
+            misspelled = spell.unknown(words)
+
+            for word in misspelled:
+                corrected_word = spell.correction(word)
+                corrections.append({"before": word, "after": corrected_word})
+
+    return corrections
