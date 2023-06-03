@@ -51,11 +51,11 @@ def get_skill_by_index(data, index):
     return jsonify({"Server Error": "Couldn't find needed skill"})
 
 
-def spell_check(data, section):
+def spell_check(data):
     spell = SpellChecker()
     corrections = []
 
-    for attr in data[section]:
+    for attr in data:
         for key, value in vars(attr).items():
             if key == 'logo':
                 continue
