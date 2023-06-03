@@ -52,6 +52,9 @@ def get_skill_by_index(data, index):
 
 
 def spell_check(data):
+    '''
+    Spell check on  content added by user
+    '''
     spell = SpellChecker()
     corrections = []
 
@@ -67,7 +70,6 @@ def spell_check(data):
                 # Skip words that contain numbers
                 if any(char.isdigit() for char in word):
                     continue
-                
                 corrected_word = spell.correction(word)
                 corrections.append({"before": word, "after": corrected_word})
 
