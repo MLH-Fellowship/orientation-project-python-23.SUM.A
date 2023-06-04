@@ -66,6 +66,6 @@ def update_experience_by_index(data, index, new_experience_json):
             # Check if the field exists in new_experience_json
             if field in new_experience_json:
                 # Update the corresponding field in the existing experience
-                data["experience"][index].__setattr__(field, new_experience_json[field])
+                setattr(data["experience"][index], field, new_experience_json[field])
         return jsonify(data["experience"][index])
     return jsonify({"Server Error": "Couldn't find needed experience"})
