@@ -170,7 +170,8 @@ def test_editing_existing_experience_partially():
     field_to_be_updated = {
         "company": "Not A Cool Company",
     }
-    response = app.test_client().put(f'/resume/experience?index={item_id}', json=field_to_be_updated)
+    response = app.test_client().put(f'/resume/experience?index={item_id}',
+                                     json=field_to_be_updated)
     full_updated_experience = {
         "title": "Software Developer",
         "company": "Not A Cool Company",
