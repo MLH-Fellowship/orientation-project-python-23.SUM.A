@@ -3,9 +3,10 @@ Flask Application
 '''
 from flask import Flask, jsonify, request
 from models import Experience, Education, Skill
-from utils import get_experience_by_index, get_education_by_index, get_skill_by_index
+from utils import get_experience_by_index, get_education_by_index, get_skill_by_index, update_experience_by_index
 
 app = Flask(__name__)
+SERVER_ERROR = "Server Error"
 
 data = {
     "experience": [
@@ -40,7 +41,7 @@ def hello_world():
     return jsonify({"message": "Hello, World!"})
 
 
-@app.route('/resume/experience', methods=['GET', 'POST'])
+@app.route('/resume/experience', methods=['GET', 'POST', 'PUT'])
 def experience():
     '''
     Handle experience requests
@@ -64,6 +65,16 @@ def experience():
 
         data["experience"].append(new)
         return jsonify({"id": data["experience"].index(new)})
+
+    if request.method == 'PUT':
+        index = request.args.get("index")
+        if index is not None:
+            req = request.get_json()
+            existing_experience = get_experience_by_index(data, index)
+            if SERVER_ERROR in existing_experience.json:
+                # will return the server error returnd by get_experience_by_index function
+                return existing_experience
+            return update_experience_by_index(data, index, req)
     return jsonify({"Server Error": "Couldn't process method"})
 
 
