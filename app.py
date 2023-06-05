@@ -51,43 +51,55 @@ def experience():
     '''
 
     if request.method == 'GET':
-        index = request.args.get("index")
-        if index is not None:
-            return get_experience_by_index(data, index)
-        return jsonify(data["experience"])
+        return handle_get_experience()
 
     if request.method == 'POST':
-        req = request.get_json()
-
-        required_fields = {"title":"string", "company":"string", "start_date":"string" \
-                           , "end_date":"string", "description":"string", "logo":"string"}
-
-        code, err_message = validate_request(req, required_fields)
-
-        if code != 0:
-            return jsonify({"error": err_message}), code
-
-        new = Experience(req["title"],
-            req["company"],
-            req["start_date"],
-            req["end_date"],
-            req["description"],
-            req["logo"]
-        )
-
-        data["experience"].append(new)
-
-        return jsonify({"id": data["experience"].index(new)})
+        return handle_post_experience()
 
     if request.method == 'PUT':
-        index = request.args.get("index")
-        if index is not None:
-            req = request.get_json()
-            existing_experience = get_experience_by_index(data, index)
-            if SERVER_ERROR in existing_experience.json:
-                # will return the server error returnd by get_experience_by_index function
-                return existing_experience
-            return update_experience_by_index(data, index, req)
+        return handle_put_experience()
+
+    return jsonify({"Server Error": "Couldn't process method"})
+
+def handle_get_experience():
+    index = request.args.get("index")
+    if index is not None:
+        return get_experience_by_index(data, index)
+    return jsonify(data["experience"])
+
+def handle_post_experience():
+    req = request.get_json()
+
+    required_fields = {"title": "string", "company": "string", "start_date": "string", "end_date": "string",
+                       "description": "string", "logo": "string"}
+
+    code, err_message = validate_request(req, required_fields)
+
+    if code != 0:
+        return jsonify({"error": err_message}), code
+
+    new = Experience(req["title"],
+                     req["company"],
+                     req["start_date"],
+                     req["end_date"],
+                     req["description"],
+                     req["logo"]
+                     )
+
+    data["experience"].append(new)
+
+    return jsonify({"id": data["experience"].index(new)})
+
+def handle_put_experience():
+    index = request.args.get("index")
+    if index is not None:
+        req = request.get_json()
+        existing_experience = get_experience_by_index(data, index)
+        if SERVER_ERROR in existing_experience.json:
+            # will return the server error returned by get_experience_by_index function
+            return existing_experience
+        return update_experience_by_index(data, index, req)
+
     return jsonify({"Server Error": "Couldn't process method"})
 
 
