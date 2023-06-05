@@ -58,3 +58,26 @@ def delete_skill_by_index(data, index):
         del data["skill"][index]
         return jsonify({"Success": "Skill deleted"})
     return jsonify({"Server Error": "Couldn't find needed skill"})
+
+
+def validate_request(req, required_fields):
+    '''
+    Returns an error code and message if the request is invalid
+    '''
+    missing_fields = [field for field in list(required_fields.keys()) if field not in req]
+
+    if not isinstance(req, dict):
+        return 400, "Request data is not valid JSON"
+    if missing_fields:
+        return 400, f"Missing fields: {', '.join(missing_fields)}"
+
+    # Validate fields types
+    for field in list(required_fields.keys()):
+        if required_fields[field] == "string":
+            if not isinstance(req[field], str):
+                return 400, "Some fields have incorrect type"
+        if required_fields[field] == "int":
+            if not isinstance(req[field], int):
+                return 400, "Some fields have incorrect type"
+
+    return 0, ""
