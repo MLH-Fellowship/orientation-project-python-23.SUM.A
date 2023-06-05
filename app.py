@@ -62,12 +62,20 @@ def experience():
     return jsonify({"Server Error": "Couldn't process method"})
 
 def handle_get_experience():
+    '''
+    Handle experience get requests
+    '''
+
     index = request.args.get("index")
     if index is not None:
         return get_experience_by_index(data, index)
     return jsonify(data["experience"])
 
 def handle_post_experience():
+    '''
+    Handle experience post requests
+    '''
+
     req = request.get_json()
 
     required_fields = {"title": "string", "company": "string", "start_date": "string", "end_date": "string",
@@ -91,6 +99,10 @@ def handle_post_experience():
     return jsonify({"id": data["experience"].index(new)})
 
 def handle_put_experience():
+    '''
+    Handle experience put requests
+    '''
+
     index = request.args.get("index")
     if index is not None:
         req = request.get_json()
