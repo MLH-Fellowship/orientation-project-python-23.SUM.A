@@ -3,8 +3,12 @@ Flask Application
 '''
 from flask import Flask, jsonify, request
 from models import Experience, Education, Skill
-from utils import get_experience_by_index, get_education_by_index, get_skill_by_index
-
+from utils import (
+    get_experience_by_index,
+    get_education_by_index,
+    get_skill_by_index,
+    validate_request
+)
 app = Flask(__name__)
 
 data = {
@@ -54,6 +58,15 @@ def experience():
 
     if request.method == 'POST':
         req = request.get_json()
+
+        required_fields = {"title":"string", "company":"string", "start_date":"string" \
+                           , "end_date":"string", "description":"string", "logo":"string"}
+
+        code, err_message = validate_request(req, required_fields)
+
+        if code != 0:
+            return jsonify({"error": err_message}), code
+
         new = Experience(req["title"],
             req["company"],
             req["start_date"],
@@ -63,6 +76,7 @@ def experience():
         )
 
         data["experience"].append(new)
+
         return jsonify({"id": data["experience"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
 
@@ -80,6 +94,15 @@ def education():
 
     if request.method == 'POST':
         req = request.get_json()
+
+        required_fields = {"school":"string", "start_date":"string", "end_date":"string" \
+                           , "grade":"string", "logo":"string"}
+
+        code, err_message = validate_request(req, required_fields)
+
+        if code != 0:
+            return jsonify({"error": err_message}), code
+
         new = Education(req["course"],
             req["school"],
             req["start_date"],
@@ -87,8 +110,8 @@ def education():
             req["grade"],
             req["logo"]
         )
-
         data["education"].append(new)
+
         return jsonify({"id": data["education"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
 
@@ -106,11 +129,16 @@ def skill():
 
     if request.method == 'POST':
         req = request.get_json()
-        new = Skill(req["name"],
-            req["proficiency"],
-            req["logo"]
-        )
 
+        required_fields = {"name":"string", "proficiency":"string", "logo":"string"}
+
+        code, err_message = validate_request(req, required_fields)
+
+        if code != 0:
+            return jsonify({"error": err_message}), code
+
+        new = Skill(req["name"], req["proficiency"], req["logo"])
         data["skill"].append(new)
+
         return jsonify({"id": data["skill"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
