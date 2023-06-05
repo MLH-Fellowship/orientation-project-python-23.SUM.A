@@ -3,8 +3,12 @@ Flask Application
 '''
 from flask import Flask, jsonify, request
 from models import Experience, Education, Skill
-from utils import get_experience_by_index, get_education_by_index, get_skill_by_index
-
+from utils import (
+    get_experience_by_index,
+    get_education_by_index,
+    get_skill_by_index,
+    validate_request
+)
 app = Flask(__name__)
 
 data = {
@@ -55,31 +59,10 @@ def experience():
     if request.method == 'POST':
         req = request.get_json()
 
-        err_message = ""
-        code = 0
+        required_fields = {"title":"string", "company":"string", "start_date":"string" \
+                           , "end_date":"string", "description":"string", "logo":"string"}
 
-        required_fields = ["title", "company", "start_date", "end_date", "description", "logo"]
-        missing_fields = [field for field in required_fields if field not in req]
-
-        if not isinstance(req, dict):
-            err_message = "Request data is not valid JSON"
-            code = 400
-        elif missing_fields:
-            err_message = f"Missing fields: {', '.join(missing_fields)}"
-            code = 400
-        # Validate fields types
-        elif not isinstance(req["title"], str) or \
-        not isinstance(req["company"], str) or \
-        not isinstance(req["start_date"], str) or \
-        not isinstance(req["end_date"], str) or \
-        not isinstance(req["description"], str):
-            err_message = "Some fields have incorrect type"
-            code = 400
-        # I had to do this to pass the linter
-        # R0916: Too many boolean expressions in if statement (6/5) (too-many-boolean-expressions)
-        elif not isinstance(req["logo"], str):
-            err_message = "Some fields have incorrect type"
-            code = 400
+        code, err_message = validate_request(req, required_fields)
 
         if code != 0:
             return jsonify({"error": err_message}), code
@@ -112,26 +95,10 @@ def education():
     if request.method == 'POST':
         req = request.get_json()
 
-        err_message = ""
-        code = 0
+        required_fields = {"school":"string", "start_date":"string", "end_date":"string" \
+                           , "grade":"string", "logo":"string"}
 
-        required_fields = ["school", "start_date", "end_date", "grade", "logo"]
-        missing_fields = [field for field in required_fields if field not in req]
-
-        if not isinstance(req, dict):
-            err_message = "Request data is not valid JSON"
-            code = 400
-        elif missing_fields:
-            err_message = "Missing fields: {', '.join(missing_fields)}"
-            code = 400
-        # Validate fields types
-        elif not isinstance(req["school"], str) or \
-        not isinstance(req["start_date"], str) or \
-        not isinstance(req["end_date"], str) or \
-        not isinstance(req["grade"], str) or \
-        not isinstance(req["logo"], str):
-            err_message = "Some fields have incorrect type"
-            code = 400
+        code, err_message = validate_request(req, required_fields)
 
         if code != 0:
             return jsonify({"error": err_message}), code
@@ -163,24 +130,9 @@ def skill():
     if request.method == 'POST':
         req = request.get_json()
 
-        err_message = ""
-        code = 0
+        required_fields = {"name":"string", "proficiency":"string", "logo":"string"}
 
-        required_fields = ["name", "proficiency", "logo"]
-        missing_fields = [field for field in required_fields if field not in req]
-
-        if not isinstance(req, dict):
-            err_message = "Request data is not valid JSON"
-            code = 400
-        elif missing_fields:
-            err_message = "Missing fields: {', '.join(missing_fields)}"
-            code = 400
-        # Validate fields types
-        elif not isinstance(req["name"], str) or \
-        not isinstance(req["proficiency"], str) or \
-        not isinstance(req["logo"], str):
-            err_message = "Some fields have incorrect type"
-            code = 400
+        code, err_message = validate_request(req, required_fields)
 
         if code != 0:
             return jsonify({"error": err_message}), code
