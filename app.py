@@ -78,8 +78,8 @@ def handle_post_experience():
 
     req = request.get_json()
 
-    required_fields = {"title": "string", "company": "string", "start_date": "string", "end_date": "string",
-                       "description": "string", "logo": "string"}
+    required_fields = {"title":"string", "company":"string", "start_date":"string" \
+                           , "end_date":"string", "description":"string", "logo":"string"}
 
     code, err_message = validate_request(req, required_fields)
 
