@@ -120,41 +120,58 @@ def education():
     Handles education requests
     '''
     if request.method == 'GET':
-        index = request.args.get("index")
-        if index is not None:
-            return get_education_by_index(data, index)
-        return jsonify(data["education"])
+        return handle_get_education()
 
     if request.method == 'POST':
-        req = request.get_json()
-
-        required_fields = {"school":"string", "start_date":"string", "end_date":"string" \
-                           , "grade":"string", "logo":"string"}
-
-        code, err_message = validate_request(req, required_fields)
-
-        if code != 0:
-            return jsonify({"error": err_message}), code
-
-        new = Education(req["course"],
-            req["school"],
-            req["start_date"],
-            req["end_date"],
-            req["grade"],
-            req["logo"]
-        )
-        data["education"].append(new)
-
-        return jsonify({"id": data["education"].index(new)})
+        return handle_post_education()
 
     if request.method == 'DELETE':
-        index = request.args.get("index")
-        if index is not None:
-            return delete_education_by_index(data, index)
-
-        return jsonify(data["education"])
+        return handle_delete_education()
 
     return jsonify({"Server Error": "Couldn't process method"})
+
+def handle_get_education():
+    '''
+    Handle education get requests
+    '''
+    index = request.args.get("index")
+    if index is not None:
+        return get_education_by_index(data, index)
+    return jsonify(data["education"])
+
+def handle_post_education():
+    '''
+    Handle education post requests
+    '''
+    req = request.get_json()
+
+    required_fields = {"school":"string", "start_date":"string", "end_date":"string" \
+                        , "grade":"string", "logo":"string"}
+
+    code, err_message = validate_request(req, required_fields)
+
+    if code != 0:
+        return jsonify({"error": err_message}), code
+
+    new = Education(req["course"],
+        req["school"],
+        req["start_date"],
+        req["end_date"],
+        req["grade"],
+        req["logo"]
+    )
+    data["education"].append(new)
+    return jsonify({"id": data["education"].index(new)})
+
+def handle_delete_education():
+    '''
+    Handle education delete requests
+    '''
+    index = request.args.get("index")
+    if index is not None:
+        return delete_education_by_index(data, index)
+    return jsonify(data["education"])
+
 
 
 @app.route('/resume/skill', methods=['GET', 'POST'])
