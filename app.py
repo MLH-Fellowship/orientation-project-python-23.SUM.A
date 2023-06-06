@@ -8,9 +8,6 @@ from utils import (
     get_education_by_index,
     get_skill_by_index,
     delete_skill_by_index,
-    get_experience_by_index, 
-    get_education_by_index,
-    get_skill_by_index, 
     update_experience_by_index,
     validate_request
 )
