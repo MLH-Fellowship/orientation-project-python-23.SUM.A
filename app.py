@@ -6,7 +6,7 @@ from models import Experience, Education, Skill
 from utils import (
     get_experience_by_index, get_education_by_index,
     get_skill_by_index, update_experience_by_index,
-    validate_request
+    validate_request, delete_education_by_index
 )
 app = Flask(__name__)
 SERVER_ERROR = "Server Error"
@@ -114,8 +114,7 @@ def handle_put_experience():
 
     return jsonify({"Server Error": "Couldn't process method"})
 
-
-@app.route('/resume/education', methods=['GET', 'POST'])
+@app.route('/resume/education', methods=['GET', 'POST', 'DELETE'])
 def education():
     '''
     Handles education requests
@@ -147,6 +146,14 @@ def education():
         data["education"].append(new)
 
         return jsonify({"id": data["education"].index(new)})
+
+    if request.method == 'DELETE':
+        index = request.args.get("index")
+        if index is not None:
+            return delete_education_by_index(data, index)
+
+        return jsonify(data["education"])
+
     return jsonify({"Server Error": "Couldn't process method"})
 
 
