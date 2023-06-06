@@ -2,7 +2,9 @@
 Utils file which separates the logic from the app.py router file
 '''
 
+import dataclasses
 from flask import jsonify
+from models import Experience
 
 def get_experience_by_index(data, index):
     '''
@@ -81,3 +83,22 @@ def validate_request(req, required_fields):
                 return 400, "Some fields have incorrect type"
 
     return 0, ""
+
+def update_experience_by_index(data, index, new_experience_json):
+    '''
+    Update an existing experience by index or do nothing if not found
+    You can only pass the field you want to change instead of passing a new whole object
+    '''
+    index = int(index)
+    if 0 <= index < len(data["experience"]):
+        # Get the fields of the Experience class dynamically instead of hardcoding
+        fields_to_update = [field.name for field in dataclasses.fields(Experience)]
+        print(fields_to_update)
+        # Iterate over each field to update
+        for field in fields_to_update:
+            # Check if the field exists in new_experience_json
+            if field in new_experience_json:
+                # Update the corresponding field in the existing experience
+                setattr(data["experience"][index], field, new_experience_json[field])
+        return jsonify(data["experience"][index])
+    return jsonify({"Server Error": "Couldn't find needed experience"})
