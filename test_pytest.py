@@ -193,3 +193,61 @@ def test_skill():
     response = app.test_client().post('/resume/skill', json=invalid_skill)
     assert response.status_code == 400
     assert "Some fields have incorrect type" in response.json['error']
+
+def test_editing_existing_experience():
+    '''
+    Add a new experience
+    Update this experience by passing full new experience object
+    Check that it returns the updated experience
+    '''
+    example_experience = {
+        "title": "Software Developer",
+        "company": "A Cool Company",
+        "start_date": "October 2022",
+        "end_date": "Present",
+        "description": "Writing Python Code",
+        "logo": "example-logo.png"
+    }
+    item_id = app.test_client().post('/resume/experience',
+                                     json=example_experience).json['id']
+    updated_experience = {
+        "title": "Mechanical Engineer",
+        "company": "Not A Cool Company",
+        "start_date": "January 2022",
+        "end_date": "Present",
+        "description": "Maintanence Engineer",
+        "logo": "example-logo2.png"
+    }
+    response = app.test_client().put(f'/resume/experience?index={item_id}', json=updated_experience)
+    assert response.json == updated_experience
+
+def test_editing_existing_experience_partially():
+    '''
+    Add a new experience
+    Update this experience by passing just field to be update
+    Check that it returns the updated experience
+    '''
+    example_experience = {
+        "title": "Software Developer",
+        "company": "A Cool Company",
+        "start_date": "October 2022",
+        "end_date": "Present",
+        "description": "Writing Python Code",
+        "logo": "example-logo.png"
+    }
+    item_id = app.test_client().post('/resume/experience',
+                                     json=example_experience).json['id']
+    field_to_be_updated = {
+        "company": "Not A Cool Company",
+    }
+    response = app.test_client().put(f'/resume/experience?index={item_id}',
+                                     json=field_to_be_updated)
+    full_updated_experience = {
+        "title": "Software Developer",
+        "company": "Not A Cool Company",
+        "start_date": "October 2022",
+        "end_date": "Present",
+        "description": "Writing Python Code",
+        "logo": "example-logo.png"
+    }
+    assert response.json == full_updated_experience
