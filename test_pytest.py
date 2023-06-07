@@ -308,5 +308,4 @@ def test_edu_update():
     app.test_client().put('/resume/education',query_string=params,
                                   json=updated_example_education)
     response = app.test_client().get('/resume/education')
-    #print(f"value {value}\n\n responseUpdated {response.json}")
     assert response.json[item_id] == updated_example_education
