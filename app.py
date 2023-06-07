@@ -41,7 +41,7 @@ data = {
     ]
 }
 
-
+@app.route('/')
 @app.route('/test')
 def hello_world():
     '''
@@ -53,7 +53,9 @@ def hello_world():
 @app.route('/resume/experience', methods=['GET', 'POST', 'PUT'])
 def experience():
     '''
-    Handle experience requests
+    Handles requests for experience. Determines what kind of request method 
+    is given and then sends the function off to a handler function which 
+    will return the appropriate values back to the front end.
     '''
 
     if request.method == 'GET':
@@ -69,7 +71,8 @@ def experience():
 
 def handle_get_experience():
     '''
-    Handle experience get requests
+    Will call and return get_experience_by_index function or return all of the 
+    experience objects dependent Upon whether there is an index or not
     '''
 
     index = request.args.get("index")
@@ -79,7 +82,9 @@ def handle_get_experience():
 
 def handle_post_experience():
     '''
-    Handle experience post requests
+    Will validate the requests of each of the fields to make sure that the user has 
+    inputted them correctly. Afterwards, there will be a code checked to return either 
+    an error message or append the current data and then return the JSONified object 
     '''
 
     req = request.get_json()
@@ -106,7 +111,10 @@ def handle_post_experience():
 
 def handle_put_experience():
     '''
-    Handle experience put requests
+    Will call and return get_experience_by_index function. From there, 
+    will check if there is a server error. If a server error exists, 
+    it will return that error, if not, will return the 
+    function update_experience_by_index
     '''
 
     index = request.args.get("index")
@@ -124,7 +132,12 @@ def handle_put_experience():
 @app.route('/resume/education', methods=['GET', 'POST'])
 def education():
     '''
-    Handles education requests
+    Handles requests for education. If a GET request is called, will call 
+    and return get_education_by_index function or return all of the education 
+    objects dependent upon whether there is an index or not. If a POST, will validate 
+    the requests of each of the fields to make sure that the user has inputted them correctly
+    Afterwards, there will be a code checked to return either an error message or append 
+    the current data and then return the JSONified object 
     '''
     if request.method == 'GET':
         index = request.args.get("index")
@@ -159,7 +172,12 @@ def education():
 @app.route('/resume/skill', methods=['GET', 'POST'])
 def skill():
     '''
-    Handles Skill requests
+    Handles requests for skill. If a GET request is called, will call and return 
+    get_skill_by_index function or return all of the skill objects dependent upon 
+    whether there is an index or not. if a POST,will validate the requests of each 
+    of the fields to make sure that the user has inputted them correctly Afterwards, 
+    there will be a code checked to return either an error message or append the 
+    current data and then return the JSONified object 
     '''
     if request.method == 'GET':
         index = request.args.get("index")
