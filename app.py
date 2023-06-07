@@ -7,6 +7,10 @@ from models import Experience, Education, Skill
 from utils import get_experience_by_index, get_education_by_index, get_skill_by_index
 
 app = Flask(__name__)
+
+ # CORS(app) Enables REST API receive http
+ # requests without blocking/restricting
+ # the request
 CORS(app)
 
 data = {
