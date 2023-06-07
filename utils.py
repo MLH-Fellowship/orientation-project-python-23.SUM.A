@@ -5,6 +5,7 @@ Utils file which separates the logic from the app.py router file
 import dataclasses
 from flask import jsonify
 from spellchecker import SpellChecker
+from models import Experience
 
 def get_experience_by_index(data, index):
     '''
@@ -51,37 +52,6 @@ def get_skill_by_index(data, index):
                         })
     return jsonify({"Server Error": "Couldn't find needed skill"})
 
-def spell_check(data):
-    '''
-    Spell check on  content added by user
-    '''
-    spell = SpellChecker()
-    corrections = []
-
-    for attr in data:
-        for key, value in vars(attr).items():
-            if key == 'logo':
-                continue
-
-            words = value.split()
-            corrected_words = []
-            for word in words:
-                # Skip words that contain numbers
-                if any(char.isdigit() for char in word):
-                    corrected_words.append(word)
-                else:
-                    corrected_word = spell.correction(word)
-                    corrected_words.append(corrected_word)
-
-            if words != corrected_words:
-                corrections.append(
-                    {
-                        "before": ' '.join(words), 
-                        "after": ' '.join(corrected_words)
-                    }
-                )
-
-    return corrections
 
 def validate_request(req, required_fields):
     '''
@@ -123,3 +93,34 @@ def update_experience_by_index(data, index, new_experience_json):
                 setattr(data["experience"][index], field, new_experience_json[field])
         return jsonify(data["experience"][index])
     return jsonify({"Server Error": "Couldn't find needed experience"})
+
+def spell_check(data):
+    '''
+    Spell check on content added by user
+    '''
+    spell = SpellChecker()
+    corrections = []
+
+    for attribute, value in data.__dict__.items():
+        if attribute == 'logo':
+            continue
+
+        words = value.split()
+        corrected_words = []
+        for word in words:
+            # Skip words that contain numbers
+            if any(char.isdigit() for char in word):
+                corrected_words.append(word)
+            else:
+                corrected_word = spell.correction(word)
+                corrected_words.append(corrected_word)
+
+        if words != corrected_words:
+            corrections.append(
+                {
+                    "before": ' '.join(words), 
+                    "after": ' '.join(corrected_words)
+                }
+            )
+
+    return corrections

@@ -256,16 +256,12 @@ def test_spell_check():
     '''
     Check that spelling checker works
     '''
-    test_data = {
-        "experience": [
-            Experience("Software Dveloper",
-                    "A Cool Company",
-                    "Octber 2022",
-                    "Present",
-                    "Writing Python Code",
-                    "example-logo.png")
-        ]
-    }
+    test_data = Experience("Software Dveloper",
+                   "A Cool Company",
+                   "Octber 2022",
+                   "Present",
+                   "Writing Python Code",
+                   "example-logo.png")
 
     expected_corr = [
         {
@@ -279,6 +275,6 @@ def test_spell_check():
     ]
 
     # Call spell_check function
-    corrections = spell_check(test_data["experience"])
+    corrections = spell_check(test_data)
 
     assert corrections == expected_corr
