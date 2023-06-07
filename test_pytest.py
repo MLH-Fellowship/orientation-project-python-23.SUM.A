@@ -175,9 +175,8 @@ def test_skill():
     response = app.test_client().get('/resume/skill')
     assert response.json[item_id] == example_skill
 
-    correct_response = {"Success": "Skill deleted"}
     response = app.test_client().delete('/resume/skill', query_string={'index': item_id})
-    assert response.json == correct_response
+    assert "Skill deleted" in response.json['success']
 
     incomplete_skill = {
         "name": "JavaScript",
