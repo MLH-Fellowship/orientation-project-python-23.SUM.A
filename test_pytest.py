@@ -1,16 +1,15 @@
 '''
 Tests in Pytest
 '''
-from app import Experience, spell_check
-# from models import Experience
+from app import app, Experience, spell_check
 
-# def test_client():
-#     '''
-#     Makes a request and checks the message received is the same
-#     '''
-#     response = app.test_client().get('/test')
-#     assert response.status_code == 200
-#     assert response.json['message'] == "Hello, World!"
+def test_client():
+    '''
+    Makes a request and checks the message received is the same
+    '''
+    response = app.test_client().get('/test')
+    assert response.status_code == 200
+    assert response.json['message'] == "Hello, World!"
 
 
 # def test_exp_index():
@@ -130,7 +129,7 @@ def test_spell_check():
     '''
     test_data = {
         "experience": [
-            Experience("Software Developer",
+            Experience("Software Dveloper",
                     "A Cool Company",
                     "Octber 2022",
                     "Present",
@@ -141,8 +140,12 @@ def test_spell_check():
 
     expected_corr = [
         {
-            'before': 'octber',
-            'after': 'october'
+            'before': 'Software Dveloper',
+            'after': 'Software developer'
+        },
+        {
+            'before': 'Octber 2022',
+            'after': 'october 2022'
         }
     ]
 
