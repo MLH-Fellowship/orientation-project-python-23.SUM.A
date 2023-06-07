@@ -6,7 +6,8 @@ from models import Experience, Education, Skill
 from utils import (
     get_experience_by_index, get_education_by_index,
     get_skill_by_index, update_experience_by_index,
-    validate_request, delete_education_by_index
+    validate_request, delete_education_by_index,
+    update_education_by_index
 )
 app = Flask(__name__)
 SERVER_ERROR = "Server Error"
@@ -114,7 +115,7 @@ def handle_put_experience():
 
     return jsonify({"Server Error": "Couldn't process method"})
 
-@app.route('/resume/education', methods=['GET', 'POST', 'DELETE'])
+@app.route('/resume/education', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def education():
     '''
     Handles education requests
@@ -127,6 +128,9 @@ def education():
 
     if request.method == 'DELETE':
         return handle_delete_education()
+
+    if request.method == 'PUT':
+        return handle_put_education()
 
     return jsonify({"Server Error": "Couldn't process method"})
 
@@ -172,6 +176,22 @@ def handle_delete_education():
         return delete_education_by_index(data, index)
     return jsonify(data["education"])
 
+def handle_put_education():
+    '''
+    Handle education put requests
+    '''
+    req = request.get_json()
+    updated = Education(req["course"],
+        req["school"],
+        req["start_date"],
+        req["end_date"],
+        req["grade"],
+        req["logo"]
+    )
+    index = request.args.get("index")
+    if index is not None:
+        return update_education_by_index(data, index, updated)
+    return jsonify(data["education"])
 
 
 @app.route('/resume/skill', methods=['GET', 'POST'])

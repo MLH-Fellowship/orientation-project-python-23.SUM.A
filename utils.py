@@ -90,6 +90,23 @@ def delete_education_by_index(data, index):
                         })
     return jsonify({"Server Error": "Couldn't find needed education"})
 
+def update_education_by_index(data, index, updated):
+    '''
+    Edit and return specific education by index or None if not found
+    '''
+    index = int(index)
+    if 0 <= index < len(data["education"]):
+        data["education"].pop(index)
+        data["education"].insert(index, updated)
+        return jsonify({"course": updated.course,
+                        "school": updated.school,
+                        "start_date": updated.start_date,
+                        "end_date": updated.end_date,
+                        "grade": updated.grade,
+                        "logo": updated.logo,
+                        })
+    return jsonify({"Server Error": "Couldn't find needed education"})
+
 def update_experience_by_index(data, index, new_experience_json):
     '''
     Update an existing experience by index or do nothing if not found
