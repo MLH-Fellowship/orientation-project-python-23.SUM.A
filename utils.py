@@ -50,7 +50,6 @@ def get_skill_by_index(data, index):
                         })
     return jsonify({"Server Error": "Couldn't find needed skill"})
 
-
 def spell_check(data):
     '''
     Spell check on  content added by user
@@ -64,13 +63,21 @@ def spell_check(data):
                 continue
 
             words = value.split()
-            misspelled = spell.unknown(words)
-
-            for word in misspelled:
+            corrected_words = []
+            for word in words:
                 # Skip words that contain numbers
                 if any(char.isdigit() for char in word):
-                    continue
-                corrected_word = spell.correction(word)
-                corrections.append({"before": word, "after": corrected_word})
+                    corrected_words.append(word)
+                else:
+                    corrected_word = spell.correction(word)
+                    corrected_words.append(corrected_word)
+
+            if words != corrected_words:
+                corrections.append(
+                    {
+                        "before": ' '.join(words), 
+                        "after": ' '.join(corrected_words)
+                    }
+                )
 
     return corrections
