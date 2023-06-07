@@ -3,9 +3,14 @@ Flask Application
 '''
 from flask import Flask, jsonify, request
 from models import Experience, Education, Skill
-from utils import get_experience_by_index, get_education_by_index, get_skill_by_index, spell_check
+from utils import (
+    get_experience_by_index, get_education_by_index,
+    get_skill_by_index, update_experience_by_index,
+    validate_request, spell_check
+)
 
 app = Flask(__name__)
+SERVER_ERROR = "Server Error"
 
 data = {
     "experience": [
@@ -40,27 +45,73 @@ def hello_world():
     return jsonify({"message": "Hello, World!"})
 
 
-@app.route('/resume/experience', methods=['GET', 'POST'])
+@app.route('/resume/experience', methods=['GET', 'POST', 'PUT'])
 def experience():
     '''
     Handle experience requests
     '''
 
     if request.method == 'GET':
-        index = request.args.get("index")
-        if index is not None:
-            return get_experience_by_index(data, index)
-        return jsonify(data["experience"])
+        return handle_get_experience()
 
     if request.method == 'POST':
+        return handle_post_experience()
+
+    if request.method == 'PUT':
+        return handle_put_experience()
+
+    return jsonify({"Server Error": "Couldn't process method"})
+
+def handle_get_experience():
+    '''
+    Handle experience get requests
+    '''
+
+    index = request.args.get("index")
+    if index is not None:
+        return get_experience_by_index(data, index)
+    return jsonify(data["experience"])
+
+def handle_post_experience():
+    '''
+    Handle experience post requests
+    '''
+
+    req = request.get_json()
+
+    required_fields = {"title":"string", "company":"string", "start_date":"string" \
+                           , "end_date":"string", "description":"string", "logo":"string"}
+
+    code, err_message = validate_request(req, required_fields)
+
+    if code != 0:
+        return jsonify({"error": err_message}), code
+
+    new = Experience(req["title"],
+                     req["company"],
+                     req["start_date"],
+                     req["end_date"],
+                     req["description"],
+                     req["logo"]
+                     )
+
+    data["experience"].append(new)
+
+    return jsonify({"id": data["experience"].index(new)})
+
+def handle_put_experience():
+    '''
+    Handle experience put requests
+    '''
+
+    index = request.args.get("index")
+    if index is not None:
         req = request.get_json()
-        new = Experience(req["title"],
-            req["company"],
-            req["start_date"],
-            req["end_date"],
-            req["description"],
-            req["logo"]
-        )
+        existing_experience = get_experience_by_index(data, index)
+        if SERVER_ERROR in existing_experience.json:
+            # will return the server error returned by get_experience_by_index function
+            return existing_experience
+        return update_experience_by_index(data, index, req)
 
         data["experience"].append(new)
 
@@ -85,6 +136,15 @@ def education():
 
     if request.method == 'POST':
         req = request.get_json()
+
+        required_fields = {"school":"string", "start_date":"string", "end_date":"string" \
+                           , "grade":"string", "logo":"string"}
+
+        code, err_message = validate_request(req, required_fields)
+
+        if code != 0:
+            return jsonify({"error": err_message}), code
+
         new = Education(req["course"],
             req["school"],
             req["start_date"],
@@ -92,7 +152,6 @@ def education():
             req["grade"],
             req["logo"]
         )
-
         data["education"].append(new)
 
         # Perform spell check on the new education object
@@ -116,11 +175,15 @@ def skill():
 
     if request.method == 'POST':
         req = request.get_json()
-        new = Skill(req["name"],
-            req["proficiency"],
-            req["logo"]
-        )
 
+        required_fields = {"name":"string", "proficiency":"string", "logo":"string"}
+
+        code, err_message = validate_request(req, required_fields)
+
+        if code != 0:
+            return jsonify({"error": err_message}), code
+
+        new = Skill(req["name"], req["proficiency"], req["logo"])
         data["skill"].append(new)
 
         # Perform spell check on the new skill object
