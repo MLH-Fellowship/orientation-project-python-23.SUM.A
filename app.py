@@ -2,6 +2,7 @@
 Flask Application
 '''
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from models import Experience, Education, Skill
 from utils import (
     get_experience_by_index, get_education_by_index,
@@ -10,6 +11,11 @@ from utils import (
 )
 app = Flask(__name__)
 SERVER_ERROR = "Server Error"
+
+ # CORS(app) Enables REST API receive http
+ # requests without blocking/restricting
+ # the request
+CORS(app)
 
 data = {
     "experience": [
