@@ -6,8 +6,9 @@ from models import Experience, Education, Skill
 from utils import (
     get_experience_by_index, get_education_by_index,
     get_skill_by_index, update_experience_by_index,
-    validate_request
+    validate_request, spell_check
 )
+
 app = Flask(__name__)
 SERVER_ERROR = "Server Error"
 
@@ -112,6 +113,13 @@ def handle_put_experience():
             return existing_experience
         return update_experience_by_index(data, index, req)
 
+        data["experience"].append(new)
+
+        # Perform spell check on the new experience object
+        corrections = spell_check(data["experience"])
+        if corrections:
+            return jsonify(corrections)
+        return jsonify({"id": data["experience"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
 
 
@@ -146,6 +154,10 @@ def education():
         )
         data["education"].append(new)
 
+        # Perform spell check on the new education object
+        corrections = spell_check(data["education"])
+        if corrections:
+            return jsonify(corrections)
         return jsonify({"id": data["education"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
 
@@ -174,5 +186,9 @@ def skill():
         new = Skill(req["name"], req["proficiency"], req["logo"])
         data["skill"].append(new)
 
+        # Perform spell check on the new skill object
+        corrections = spell_check(data["skill"])
+        if corrections:
+            return jsonify(corrections)
         return jsonify({"id": data["skill"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
