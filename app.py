@@ -124,7 +124,7 @@ def skill():
         data["skill"].append(new)
 
         # Perform spell check on the new skill object
-        corrections = spell_check(data[skill])
+        corrections = spell_check(data["skill"])
         if corrections:
             return jsonify(corrections)
         return jsonify({"id": data["skill"].index(new)})
