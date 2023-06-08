@@ -242,29 +242,10 @@ def skill():
     current data and then return the JSONified object 
     '''
     if request.method == 'GET':
-        index = request.args.get("index")
-        if index is not None:
-            return get_skill_by_index(data, index)
-        return jsonify(data["skill"])
+        return handle_get_skill()
 
     if request.method == 'POST':
-        req = request.get_json()
-
-        corrections = spell_check(req)
-        if corrections:
-            return jsonify(corrections)
-
-        required_fields = {"name":"string", "proficiency":"string", "logo":"string"}
-
-        code, err_message = validate_request(req, required_fields)
-
-        if code != 0:
-            return jsonify({"error": err_message}), code
-
-        new = Skill(req["name"], req["proficiency"], req["logo"])
-        data["skill"].append(new)
-
-        return jsonify({"id": data["skill"].index(new)})
+        return handle_post_skill()
 
     if request.method == 'PUT':
         req = request.get_json()
@@ -272,4 +253,36 @@ def skill():
         corrections = spell_check(req)
         if corrections:
             return jsonify(corrections)
+
     return jsonify({"Server Error": "Couldn't process method"})
+
+def handle_get_skill():
+    '''
+    Handles skill get request
+    '''
+    index = request.args.get("index")
+    if index is not None:
+        return get_skill_by_index(data, index)
+    return jsonify(data["skill"])
+
+def handle_post_skill():
+    '''
+    Handles skill post request
+    '''
+    req = request.get_json()
+
+    corrections = spell_check(req)
+    if corrections:
+        return jsonify(corrections)
+
+    required_fields = {"name":"string", "proficiency":"string", "logo":"string"}
+
+    code, err_message = validate_request(req, required_fields)
+
+    if code != 0:
+        return jsonify({"error": err_message}), code
+
+    new = Skill(req["name"], req["proficiency"], req["logo"])
+    data["skill"].append(new)
+
+    return jsonify({"id": data["skill"].index(new)})
