@@ -336,7 +336,7 @@ def test_post_exp_spell_check():
 
     response = app.test_client().post('/resume/experience',
                                      json=exp1).json
-    
+
     assert len(response) == len(expected_corr)
     for expected in expected_corr:
         assert expected in response
@@ -371,7 +371,7 @@ def test_put_exp_spell_check():
             'after': 'Not A Cool company'
         }
     ]
-    
+
     assert response.json == expected_corr
 
 def test_post_edu_spell_check():
@@ -396,7 +396,7 @@ def test_post_edu_spell_check():
 
     response = app.test_client().post('/resume/education',
                                      json=example_education).json
-    
+
     assert len(response) == len(expected_corr)
     for expected in expected_corr:
         assert expected in response
@@ -423,7 +423,7 @@ def test_put_edu_spell_check():
 
     response = app.test_client().put('/resume/education',
                                      json=example_education).json
-    
+
     assert len(response) == len(expected_corr)
     for expected in expected_corr:
         assert expected in response
@@ -447,7 +447,7 @@ def test_post_skill_spell_check():
 
     response = app.test_client().post('/resume/skill',
                                      json=example_skill).json
-    
+
     assert len(response) == len(expected_corr)
     for expected in expected_corr:
         assert expected in response
@@ -471,7 +471,7 @@ def test_put_skill_spell_check():
 
     response = app.test_client().put('/resume/skill',
                                      json=example_skill).json
-    
+
     assert len(response) == len(expected_corr)
     for expected in expected_corr:
         assert expected in response

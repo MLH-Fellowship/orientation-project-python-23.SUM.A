@@ -3,8 +3,8 @@ Utils file which separates the logic from the app.py router file
 '''
 
 import dataclasses
-from flask import jsonify
 import re
+from flask import jsonify
 from spellchecker import SpellChecker
 from models import Experience
 

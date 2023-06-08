@@ -265,7 +265,7 @@ def skill():
         data["skill"].append(new)
 
         return jsonify({"id": data["skill"].index(new)})
-    
+
     if request.method == 'PUT':
         req = request.get_json()
 
