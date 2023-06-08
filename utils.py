@@ -4,6 +4,7 @@ Utils file which separates the logic from the app.py router file
 
 import dataclasses
 from flask import jsonify
+from spellchecker import SpellChecker
 from models import Experience
 
 def get_experience_by_index(data, index):
@@ -125,3 +126,36 @@ def update_experience_by_index(data, index, new_experience_json):
                 setattr(data["experience"][index], field, new_experience_json[field])
         return jsonify(data["experience"][index])
     return jsonify({"Server Error": "Couldn't find needed experience"})
+
+def spell_check(data):
+    '''
+    Spell check on content added by user
+    '''
+    spell = SpellChecker()
+    corrections = []
+
+    for value in data.values():
+        if isinstance(value, int):
+            value = str(value)
+        words = value.split()
+        corrected_words = []
+        for word in words:
+            # Skip words that contain numbers
+            if any(char.isdigit() for char in word):
+                corrected_words.append(word)
+            else:
+                corrected_word = spell.correction(word)
+                if corrected_word is None:
+                    corrected_words.append(word)
+                else:
+                    corrected_words.append(corrected_word)
+
+        if words != corrected_words:
+            corrections.append(
+                {
+                    "before": ' '.join(words),
+                    "after": ' '.join(corrected_words),
+                }
+            )
+
+    return corrections
