@@ -78,6 +78,9 @@ def handle_post_experience():
     '''
 
     req = request.get_json()
+    corrections = spell_check(req)
+    if corrections:
+        return jsonify(corrections)
 
     required_fields = {"title":"string", "company":"string", "start_date":"string" \
                            , "end_date":"string", "description":"string", "logo":"string"}
@@ -112,14 +115,6 @@ def handle_put_experience():
             # will return the server error returned by get_experience_by_index function
             return existing_experience
         return update_experience_by_index(data, index, req)
-
-        data["experience"].append(new)
-
-        # Perform spell check on the new experience object
-        corrections = spell_check(data["experience"])
-        if corrections:
-            return jsonify(corrections)
-        return jsonify({"id": data["experience"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
 
 
@@ -136,6 +131,10 @@ def education():
 
     if request.method == 'POST':
         req = request.get_json()
+
+        corrections = spell_check(req)
+        if corrections:
+            return jsonify(corrections)
 
         required_fields = {"school":"string", "start_date":"string", "end_date":"string" \
                            , "grade":"string", "logo":"string"}
@@ -154,10 +153,6 @@ def education():
         )
         data["education"].append(new)
 
-        # Perform spell check on the new education object
-        corrections = spell_check(data["education"])
-        if corrections:
-            return jsonify(corrections)
         return jsonify({"id": data["education"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
 
@@ -176,6 +171,10 @@ def skill():
     if request.method == 'POST':
         req = request.get_json()
 
+        corrections = spell_check(req)
+        if corrections:
+            return jsonify(corrections)
+
         required_fields = {"name":"string", "proficiency":"string", "logo":"string"}
 
         code, err_message = validate_request(req, required_fields)
@@ -186,9 +185,5 @@ def skill():
         new = Skill(req["name"], req["proficiency"], req["logo"])
         data["skill"].append(new)
 
-        # Perform spell check on the new skill object
-        corrections = spell_check(data["skill"])
-        if corrections:
-            return jsonify(corrections)
         return jsonify({"id": data["skill"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})

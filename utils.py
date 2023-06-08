@@ -101,10 +101,9 @@ def spell_check(data):
     spell = SpellChecker()
     corrections = []
 
-    for attribute, value in data.__dict__.items():
-        if attribute == 'logo':
-            continue
-
+    for value in data.values():
+        if isinstance(value, int):
+            value = str(value)
         words = value.split()
         corrected_words = []
         for word in words:
@@ -113,13 +112,16 @@ def spell_check(data):
                 corrected_words.append(word)
             else:
                 corrected_word = spell.correction(word)
-                corrected_words.append(corrected_word)
+                if corrected_word is None:
+                    corrected_words.append(word)
+                else:
+                    corrected_words.append(corrected_word)
 
         if words != corrected_words:
             corrections.append(
                 {
-                    "before": ' '.join(words), 
-                    "after": ' '.join(corrected_words)
+                    "before": ' '.join(words),
+                    "after": ' '.join(corrected_words),
                 }
             )
 

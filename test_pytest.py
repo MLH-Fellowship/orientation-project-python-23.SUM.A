@@ -1,7 +1,7 @@
 '''
 Tests in Pytest
 '''
-from app import app, Experience, spell_check
+from app import app, spell_check
 
 
 def test_client():
@@ -256,12 +256,14 @@ def test_spell_check():
     '''
     Check that spelling checker works
     '''
-    test_data = Experience("Software Dveloper",
-                   "A Cool Company",
-                   "Octber 2022",
-                   "Present",
-                   "Writing Python Code",
-                   "example-logo.png")
+    exp1 = {
+        "title": "Software Dveloper",
+        "company": "A Cooler Company",
+        "start_date": "Octber 2022",
+        "end_date": "Present",
+        "description": "Writing JavaScript Code",
+        "logo": "example-logo.png"
+    }
 
     expected_corr = [
         {
@@ -275,6 +277,6 @@ def test_spell_check():
     ]
 
     # Call spell_check function
-    corrections = spell_check(test_data)
+    corrections = spell_check(exp1)
 
     assert corrections == expected_corr
