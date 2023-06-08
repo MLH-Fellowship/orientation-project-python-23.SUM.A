@@ -312,7 +312,7 @@ def test_edu_update():
 
 def test_post_exp_spell_check():
     '''
-    Check that spelling checker works
+    Check that spelling checker works for method post for experience
     '''
     exp1 = {
         "title": "Software Dveloper",
@@ -343,7 +343,7 @@ def test_post_exp_spell_check():
 
 def test_put_exp_spell_check():
     '''
-    Check that spelling checker works
+    Check that spelling checker works for method put for experience
     '''
     example_experience = {
         "title": "Software Developer",
@@ -376,7 +376,7 @@ def test_put_exp_spell_check():
 
 def test_post_edu_spell_check():
     '''
-    Check that spelling checker works
+    Check that spelling checker works for method post for education
     '''
     example_education = {
         "course": "Engneering",
@@ -403,7 +403,7 @@ def test_post_edu_spell_check():
 
 def test_put_edu_spell_check():
     '''
-    Check that spelling checker works
+    Check that spelling checker works for method put for education
     '''
     example_education = {
         "course": "Engneering",
@@ -430,7 +430,7 @@ def test_put_edu_spell_check():
 
 def test_post_skill_spell_check():
     '''
-    Check that spelling checker works
+    Check that spelling checker works for method post for skill
     '''
     example_skill = {
         "name": "JavaScript",
@@ -454,7 +454,7 @@ def test_post_skill_spell_check():
 
 def test_put_skill_spell_check():
     '''
-    Check that spelling checker works
+    Check that spelling checker works for method put for skill
     '''
     example_skill = {
         "name": "JavaScript",
