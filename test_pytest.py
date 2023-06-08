@@ -215,7 +215,7 @@ def test_editing_existing_experience():
         "company": "Not A Cool Company",
         "start_date": "January 2022",
         "end_date": "Present",
-        "description": "Maintanence Engineer",
+        "description": "Maintenance Engineer",
         "logo": "example-logo2.png"
     }
     response = app.test_client().put(f'/resume/experience?index={item_id}', json=updated_experience)
@@ -309,3 +309,169 @@ def test_edu_update():
                                   json=updated_example_education)
     response = app.test_client().get('/resume/education')
     assert response.json[item_id] == updated_example_education
+
+def test_post_exp_spell_check():
+    '''
+    Check that spelling checker works for method post for experience
+    '''
+    exp1 = {
+        "title": "Software Dveloper",
+        "company": "A Cooler Company",
+        "start_date": "Octber 2022",
+        "end_date": "Present",
+        "description": "Writing JavaScript Code",
+        "logo": "example-logo.png"
+    }
+
+    expected_corr = [
+        {
+            'before': 'Software Dveloper',
+            'after': 'Software developer'
+        },
+        {
+            'before': 'Octber 2022',
+            'after': 'october 2022'
+        }
+    ]
+
+    response = app.test_client().post('/resume/experience',
+                                     json=exp1).json
+
+    assert len(response) == len(expected_corr)
+    for expected in expected_corr:
+        assert expected in response
+
+def test_put_exp_spell_check():
+    '''
+    Check that spelling checker works for method put for experience
+    '''
+    example_experience = {
+        "title": "Software Developer",
+        "company": "A Cool Company",
+        "start_date": "October 2022",
+        "end_date": "Present",
+        "description": "Writing Python Code",
+        "logo": "example-logo.png"
+    }
+    item_id = app.test_client().post('/resume/experience',
+                                     json=example_experience).json['id']
+    updated_experience = {
+        "title": "Mechanical Engineer",
+        "company": "Not A Cool Cmpany",
+        "start_date": "January 2022",
+        "end_date": "Present",
+        "description": "Maintenance Engineer",
+        "logo": "example-logo2.png"
+    }
+    response = app.test_client().put(f'/resume/experience?index={item_id}', json=updated_experience)
+
+    expected_corr = [
+        {
+            'before': 'Not A Cool Cmpany',
+            'after': 'Not A Cool company'
+        }
+    ]
+
+    assert response.json == expected_corr
+
+def test_post_edu_spell_check():
+    '''
+    Check that spelling checker works for method post for education
+    '''
+    example_education = {
+        "course": "Engneering",
+        "school": "NYU",
+        "start_date": "October 2022",
+        "end_date": "August 2024",
+        "grade": "86%",
+        "logo": "example-logo.png"
+    }
+
+    expected_corr = [
+        {
+            'before': 'Engneering',
+            'after': 'engineering'
+        }
+    ]
+
+    response = app.test_client().post('/resume/education',
+                                     json=example_education).json
+
+    assert len(response) == len(expected_corr)
+    for expected in expected_corr:
+        assert expected in response
+
+def test_put_edu_spell_check():
+    '''
+    Check that spelling checker works for method put for education
+    '''
+    example_education = {
+        "course": "Engneering",
+        "school": "NYU",
+        "start_date": "October 2022",
+        "end_date": "August 2024",
+        "grade": "86%",
+        "logo": "example-logo.png"
+    }
+
+    expected_corr = [
+        {
+            'before': 'Engneering',
+            'after': 'engineering'
+        }
+    ]
+
+    response = app.test_client().put('/resume/education',
+                                     json=example_education).json
+
+    assert len(response) == len(expected_corr)
+    for expected in expected_corr:
+        assert expected in response
+
+def test_post_skill_spell_check():
+    '''
+    Check that spelling checker works for method post for skill
+    '''
+    example_skill = {
+        "name": "JavaScript",
+        "proficiency": "2-4 yearrs",
+        "logo": "example-logo.png"
+    }
+
+    expected_corr = [
+        {
+            'before': '2-4 yearrs',
+            'after': '2-4 years'
+        }
+    ]
+
+    response = app.test_client().post('/resume/skill',
+                                     json=example_skill).json
+
+    assert len(response) == len(expected_corr)
+    for expected in expected_corr:
+        assert expected in response
+
+def test_put_skill_spell_check():
+    '''
+    Check that spelling checker works for method put for skill
+    '''
+    example_skill = {
+        "name": "JavaScript",
+        "proficiency": "2-4 yearrs",
+        "logo": "example-logo.png"
+    }
+
+    expected_corr = [
+        {
+            'before': '2-4 yearrs',
+            'after': '2-4 years'
+        }
+    ]
+
+    response = app.test_client().put('/resume/skill',
+                                     json=example_skill).json
+
+    assert len(response) == len(expected_corr)
+    for expected in expected_corr:
+        assert expected in response

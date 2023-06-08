@@ -8,7 +8,7 @@ from utils import (
     get_experience_by_index, get_education_by_index,
     get_skill_by_index, update_experience_by_index,
     validate_request, delete_education_by_index,
-    update_education_by_index
+    update_education_by_index, spell_check
 )
 app = Flask(__name__)
 SERVER_ERROR = "Server Error"
@@ -90,6 +90,10 @@ def handle_post_experience():
 
     req = request.get_json()
 
+    corrections = spell_check(req)
+    if corrections:
+        return jsonify(corrections)
+
     required_fields = {"title":"string", "company":"string", "start_date":"string" \
                            , "end_date":"string", "description":"string", "logo":"string"}
 
@@ -121,6 +125,11 @@ def handle_put_experience():
     index = request.args.get("index")
     if index is not None:
         req = request.get_json()
+
+        corrections = spell_check(req)
+        if corrections:
+            return jsonify(corrections)
+
         existing_experience = get_experience_by_index(data, index)
         if SERVER_ERROR in existing_experience.json:
             # will return the server error returned by get_experience_by_index function
@@ -168,6 +177,10 @@ def handle_post_education():
     '''
     req = request.get_json()
 
+    corrections = spell_check(req)
+    if corrections:
+        return jsonify(corrections)
+
     required_fields = {"school":"string", "start_date":"string", "end_date":"string" \
                         , "grade":"string", "logo":"string"}
 
@@ -200,6 +213,11 @@ def handle_put_education():
     Handle education put requests
     '''
     req = request.get_json()
+
+    corrections = spell_check(req)
+    if corrections:
+        return jsonify(corrections)
+
     updated = Education(req["course"],
         req["school"],
         req["start_date"],
@@ -213,7 +231,7 @@ def handle_put_education():
     return jsonify(data["education"])
 
 
-@app.route('/resume/skill', methods=['GET', 'POST'])
+@app.route('/resume/skill', methods=['GET', 'POST', 'PUT'])
 def skill():
     '''
     Handles requests for skill. If a GET request is called, will call and return 
@@ -224,23 +242,47 @@ def skill():
     current data and then return the JSONified object 
     '''
     if request.method == 'GET':
-        index = request.args.get("index")
-        if index is not None:
-            return get_skill_by_index(data, index)
-        return jsonify(data["skill"])
+        return handle_get_skill()
 
     if request.method == 'POST':
+        return handle_post_skill()
+
+    if request.method == 'PUT':
         req = request.get_json()
 
-        required_fields = {"name":"string", "proficiency":"string", "logo":"string"}
+        corrections = spell_check(req)
+        if corrections:
+            return jsonify(corrections)
 
-        code, err_message = validate_request(req, required_fields)
-
-        if code != 0:
-            return jsonify({"error": err_message}), code
-
-        new = Skill(req["name"], req["proficiency"], req["logo"])
-        data["skill"].append(new)
-
-        return jsonify({"id": data["skill"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
+
+def handle_get_skill():
+    '''
+    Handles skill get request
+    '''
+    index = request.args.get("index")
+    if index is not None:
+        return get_skill_by_index(data, index)
+    return jsonify(data["skill"])
+
+def handle_post_skill():
+    '''
+    Handles skill post request
+    '''
+    req = request.get_json()
+
+    corrections = spell_check(req)
+    if corrections:
+        return jsonify(corrections)
+
+    required_fields = {"name":"string", "proficiency":"string", "logo":"string"}
+
+    code, err_message = validate_request(req, required_fields)
+
+    if code != 0:
+        return jsonify({"error": err_message}), code
+
+    new = Skill(req["name"], req["proficiency"], req["logo"])
+    data["skill"].append(new)
+
+    return jsonify({"id": data["skill"].index(new)})
