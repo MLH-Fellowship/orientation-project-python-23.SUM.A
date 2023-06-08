@@ -1,4 +1,5 @@
 flask
 pytest
 pylint
+pyspellchecker
 Flask-Cors

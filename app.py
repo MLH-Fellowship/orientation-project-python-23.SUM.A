@@ -8,8 +8,9 @@ from utils import (
     get_experience_by_index, get_education_by_index,
     get_skill_by_index, update_experience_by_index,
     validate_request, delete_education_by_index,
-    update_education_by_index
+    update_education_by_index, spell_check
 )
+
 app = Flask(__name__)
 SERVER_ERROR = "Server Error"
 
@@ -89,6 +90,9 @@ def handle_post_experience():
     '''
 
     req = request.get_json()
+    corrections = spell_check(req)
+    if corrections:
+        return jsonify(corrections)
 
     required_fields = {"title":"string", "company":"string", "start_date":"string" \
                            , "end_date":"string", "description":"string", "logo":"string"}
@@ -126,7 +130,6 @@ def handle_put_experience():
             # will return the server error returned by get_experience_by_index function
             return existing_experience
         return update_experience_by_index(data, index, req)
-
     return jsonify({"Server Error": "Couldn't process method"})
 
 @app.route('/resume/education', methods=['GET', 'POST', 'DELETE', 'PUT'])
@@ -145,8 +148,12 @@ def education():
     if request.method == 'POST':
         return handle_post_education()
 
+        required_fields = {"school":"string", "start_date":"string", "end_date":"string" \
+                           , "grade":"string", "logo":"string"}
+
     if request.method == 'DELETE':
         return handle_delete_education()
+
 
     if request.method == 'PUT':
         return handle_put_education()
@@ -167,6 +174,10 @@ def handle_post_education():
     Handle education post requests
     '''
     req = request.get_json()
+
+    corrections = spell_check(req)
+    if corrections:
+        return jsonify(corrections)
 
     required_fields = {"school":"string", "start_date":"string", "end_date":"string" \
                         , "grade":"string", "logo":"string"}
@@ -231,6 +242,10 @@ def skill():
 
     if request.method == 'POST':
         req = request.get_json()
+
+        corrections = spell_check(req)
+        if corrections:
+            return jsonify(corrections)
 
         required_fields = {"name":"string", "proficiency":"string", "logo":"string"}
 

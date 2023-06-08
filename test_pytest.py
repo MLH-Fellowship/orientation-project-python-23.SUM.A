@@ -1,7 +1,7 @@
 '''
 Tests in Pytest
 '''
-from app import app
+from app import app, spell_check
 
 
 def test_client():
@@ -252,6 +252,34 @@ def test_editing_existing_experience_partially():
     }
     assert response.json == full_updated_experience
 
+def test_spell_check():
+    '''
+    Check that spelling checker works
+    '''
+    exp1 = {
+        "title": "Software Dveloper",
+        "company": "A Cooler Company",
+        "start_date": "Octber 2022",
+        "end_date": "Present",
+        "description": "Writing JavaScript Code",
+        "logo": "example-logo.png"
+    }
+
+    expected_corr = [
+        {
+            'before': 'Software Dveloper',
+            'after': 'Software developer'
+        },
+        {
+            'before': 'Octber 2022',
+            'after': 'october 2022'
+        }
+    ]
+
+    # Call spell_check function
+    corrections = spell_check(exp1)
+
+    assert corrections == expected_corr
 
 def test_edu_delete():
     '''
