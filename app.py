@@ -8,7 +8,7 @@ from utils import (
     get_experience_by_index, get_education_by_index,
     get_skill_by_index, update_experience_by_index,
     validate_request, delete_education_by_index,
-    update_education_by_index
+    update_education_by_index, delete_exp_by_index
 )
 app = Flask(__name__)
 SERVER_ERROR = "Server Error"
@@ -51,7 +51,7 @@ def hello_world():
     return jsonify({"message": "Hello, World!"})
 
 
-@app.route('/resume/experience', methods=['GET', 'POST', 'PUT'])
+@app.route('/resume/experience', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def experience():
     '''
     Handles requests for experience. Determines what kind of request method 
@@ -67,6 +67,9 @@ def experience():
 
     if request.method == 'PUT':
         return handle_put_experience()
+
+    if request.method == 'DELETE':
+        return handle_delete_experience()
 
     return jsonify({"Server Error": "Couldn't process method"})
 
@@ -128,6 +131,16 @@ def handle_put_experience():
         return update_experience_by_index(data, index, req)
 
     return jsonify({"Server Error": "Couldn't process method"})
+
+def handle_delete_experience():
+    '''
+    Handle experience delete requests
+    '''
+    index = request.args.get("index")
+    if index is not None:
+        return delete_exp_by_index(data, index)
+
+    return jsonify({"Server Error": "Couldn't process method with no index"})
 
 @app.route('/resume/education', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def education():
