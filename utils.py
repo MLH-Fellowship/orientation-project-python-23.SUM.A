@@ -125,3 +125,19 @@ def update_experience_by_index(data, index, new_experience_json):
                 setattr(data["experience"][index], field, new_experience_json[field])
         return jsonify(data["experience"][index])
     return jsonify({"Server Error": "Couldn't find needed experience"})
+
+def delete_exp_by_index(data, index):
+    '''
+    Delete and return specific experience by index or None if not found
+    '''
+    index = int(index)
+    if 0 <= index < len(data["experience"]):
+        exp = data["experience"].pop(index)
+        return jsonify({"title": exp.title,
+                        "company": exp.company,
+                        "start_date": exp.start_date,
+                        "end_date": exp.end_date,
+                        "description": exp.description,
+                        "logo": exp.logo,
+                        })
+    return jsonify({"Server Error": "Couldn't find needed experience"})
