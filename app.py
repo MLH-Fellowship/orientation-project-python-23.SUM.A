@@ -237,7 +237,7 @@ def skill():
 
     if request.method == 'PUT':
         return handle_put_skill()
-      
+
     if request.method == 'DELETE':
         index = request.args.get("index")
         if index is not None:
