@@ -328,6 +328,12 @@ def test_exp_delete():
     item_id = app.test_client().post('/resume/experience',
                                      json=example_experience).json['id']
 
+    initial_get_response = app.test_client().get('/resume/experience')
+
     response = app.test_client().delete(f'/resume/experience?index={item_id}')
+
+    final_get_response = app.test_client().get('/resume/experience')
+
     assert response.status_code == 200
     assert response.json == example_experience
+    assert initial_get_response.json != final_get_response.json
