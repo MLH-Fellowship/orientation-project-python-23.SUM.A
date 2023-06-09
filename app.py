@@ -10,6 +10,15 @@ from utils import (
     validate_request
 )
 
+# TO DEVELOPER:
+# This project utilizes flas_cors.
+# A Flask extension for handling Cross Origin Resource Sharing (CORS),
+# making cross-origin AJAX possible.
+# This package has a simple philosophy: when you want to enable CORS,
+# you wish to enable it for all use cases on a domain.
+# This means no mucking around with different allowed headers, methods, etc.
+# Description provided by: https://flask-cors.readthedocs.io/en/latest/
+
 app = Flask(__name__)
 CORS(app)
 SERVER_ERROR = "Server Error"
