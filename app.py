@@ -3,12 +3,15 @@ Flask Application
 '''
 from flask import Flask, jsonify, request
 from models import Experience, Education, Skill
+from flask_cors import CORS,cross_origin
 from utils import (
     get_experience_by_index, get_education_by_index,
     get_skill_by_index, update_experience_by_index,
     validate_request
 )
+
 app = Flask(__name__)
+CORS(app)
 SERVER_ERROR = "Server Error"
 
 data = {
@@ -35,6 +38,8 @@ data = {
     ]
 }
 
+
+
 @app.route('/')
 @app.route('/test')
 def hello_world():
@@ -44,7 +49,9 @@ def hello_world():
     return jsonify({"message": "Hello, World!"})
 
 
+
 @app.route('/resume/experience', methods=['GET', 'POST', 'PUT'])
+@cross_origin()
 def experience():
     '''
     Handles requests for experience. Determines what kind of request method 
@@ -123,7 +130,8 @@ def handle_put_experience():
     return jsonify({"Server Error": "Couldn't process method"})
 
 
-@app.route('/resume/education', methods=['GET', 'POST'])
+@app.route('/resume/education', methods=['POST', 'GET'])
+@cross_origin()
 def education():
     '''
     Handles requests for education. If a GET request is called, will call 
@@ -135,14 +143,16 @@ def education():
     '''
     if request.method == 'GET':
         index = request.args.get("index")
+        print(index)
         if index is not None:
             return get_education_by_index(data, index)
         return jsonify(data["education"])
 
     if request.method == 'POST':
+        
         req = request.get_json()
-
-        required_fields = {"school":"string", "start_date":"string", "end_date":"string" \
+        
+        required_fields = {"course":"string","school":"string", "start_date":"string", "end_date":"string" \
                            , "grade":"string", "logo":"string"}
 
         code, err_message = validate_request(req, required_fields)
@@ -157,13 +167,14 @@ def education():
             req["grade"],
             req["logo"]
         )
+        
         data["education"].append(new)
-
         return jsonify({"id": data["education"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
 
 
 @app.route('/resume/skill', methods=['GET', 'POST'])
+@cross_origin()
 def skill():
     '''
     Handles requests for skill. If a GET request is called, will call and return 
@@ -194,3 +205,6 @@ def skill():
 
         return jsonify({"id": data["skill"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
+
+if __name__ == '__main__':
+    app.run(port=8000,debug=True)

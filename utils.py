@@ -27,6 +27,7 @@ def get_education_by_index(data, index):
     Return specific education by index or None if not found
     '''
     index = int(index)
+   
     if 0 <= index < len(data["education"]):
         edu = data["education"][index]
         return jsonify({"course": edu.course,
@@ -61,6 +62,7 @@ def validate_request(req, required_fields):
     if not isinstance(req, dict):
         return 400, "Request data is not valid JSON"
     if missing_fields:
+        print('Triggered')
         return 400, f"Missing fields: {', '.join(missing_fields)}"
 
     # Validate fields types
