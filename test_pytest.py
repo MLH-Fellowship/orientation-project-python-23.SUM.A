@@ -309,3 +309,25 @@ def test_edu_update():
                                   json=updated_example_education)
     response = app.test_client().get('/resume/education')
     assert response.json[item_id] == updated_example_education
+
+def test_exp_delete():
+    '''
+    Delete an experience and then get all experiences. 
+    
+    Check that it deletes the experience at index 0 in that list
+    '''
+    example_experience = {
+        "title": "Software Developer",
+        "company": "A Cool Company",
+        "start_date": "October 2022",
+        "end_date": "Present",
+        "description": "Writing Python Code",
+        "logo": "example-logo.png"
+    }
+
+    item_id = app.test_client().post('/resume/experience',
+                                     json=example_experience).json['id']
+
+    response = app.test_client().delete(f'/resume/experience?index={item_id}')
+    assert response.status_code == 200
+    assert response.json == example_experience
