@@ -27,7 +27,6 @@ def get_education_by_index(data, index):
     Return specific education by index or None if not found
     '''
     index = int(index)
-   
     if 0 <= index < len(data["education"]):
         edu = data["education"][index]
         return jsonify({"course": edu.course,

@@ -2,8 +2,8 @@
 Flask Application
 '''
 from flask import Flask, jsonify, request
-from models import Experience, Education, Skill
 from flask_cors import CORS,cross_origin
+from models import Experience, Education, Skill
 from utils import (
     get_experience_by_index, get_education_by_index,
     get_skill_by_index, update_experience_by_index,
@@ -149,10 +149,9 @@ def education():
         return jsonify(data["education"])
 
     if request.method == 'POST':
-        
         req = request.get_json()
-        
-        required_fields = {"course":"string","school":"string", "start_date":"string", "end_date":"string" \
+        required_fields = {"course":"string","school":"string", "start_date":"string",
+        "end_date":"string" \
                            , "grade":"string", "logo":"string"}
 
         code, err_message = validate_request(req, required_fields)
@@ -167,7 +166,6 @@ def education():
             req["grade"],
             req["logo"]
         )
-        
         data["education"].append(new)
         return jsonify({"id": data["education"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
