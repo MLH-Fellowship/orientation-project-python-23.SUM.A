@@ -9,7 +9,7 @@ from utils import (
     get_experience_by_index, get_education_by_index,
     get_skill_by_index, update_experience_by_index,
     validate_request, delete_education_by_index,
-    update_education_by_index
+    update_education_by_index, update_skill_by_index
 )
 
 # TO DEVELOPER:
@@ -232,7 +232,7 @@ def handle_put_education():
     return jsonify(data["education"])
 
 
-@app.route('/resume/skill', methods=['GET', 'POST'])
+@app.route('/resume/skill', methods=['GET', 'POST', 'PUT'])
 @cross_origin()
 def skill():
     '''
@@ -244,26 +244,55 @@ def skill():
     current data and then return the JSONified object 
     '''
     if request.method == 'GET':
-        index = request.args.get("index")
-        if index is not None:
-            return get_skill_by_index(data, index)
-        return jsonify(data["skill"])
+        return handle_get_skill()
 
     if request.method == 'POST':
-        req = request.get_json()
+        return handle_post_skill()
 
-        required_fields = {"name":"string", "proficiency":"string", "logo":"string"}
+    if request.method == 'PUT':
+        return handle_put_skill()
 
-        code, err_message = validate_request(req, required_fields)
-
-        if code != 0:
-            return jsonify({"error": err_message}), code
-
-        new = Skill(req["name"], req["proficiency"], req["logo"])
-        data["skill"].append(new)
-
-        return jsonify({"id": data["skill"].index(new)})
     return jsonify({"Server Error": "Couldn't process method"})
 
-if __name__ == '__main__':
-    app.run(port=8000,debug=True)
+
+def handle_get_skill():
+    '''
+    Handle skill get requests
+    '''
+    index = request.args.get("index")
+    if index is not None:
+        return get_skill_by_index(data, index)
+    return jsonify(data["skill"])
+
+def handle_post_skill():
+    '''
+    Handle skill post requests
+    '''
+    req = request.get_json()
+
+    required_fields = {"name":"string", "proficiency":"string", "logo":"string"}
+
+    code, err_message = validate_request(req, required_fields)
+
+    if code != 0:
+        return jsonify({"error": err_message}), code
+
+    new = Skill(req["name"], req["proficiency"], req["logo"])
+    data["skill"].append(new)
+
+    return jsonify({"id": data["skill"].index(new)})
+
+def handle_put_skill():
+    '''
+    Handle skill put requests
+    '''
+    req = request.get_json()
+    updated = Skill(req["name"],
+        req["proficiency"],
+        req["logo"]
+    )
+    index = request.args.get("index")
+    if index is not None:
+        return update_skill_by_index(data, index, updated)
+    return jsonify(data["skill"])
+

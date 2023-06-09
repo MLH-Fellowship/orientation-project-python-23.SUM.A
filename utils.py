@@ -126,3 +126,17 @@ def update_experience_by_index(data, index, new_experience_json):
                 setattr(data["experience"][index], field, new_experience_json[field])
         return jsonify(data["experience"][index])
     return jsonify({"Server Error": "Couldn't find needed experience"})
+
+def update_skill_by_index(data, index, updated):
+    '''
+    Edit and return specific skill by index or None if not found
+    '''
+    index = int(index)
+    if 0 <= index < len(data["skill"]):
+        data["skill"].pop(index)
+        data["skill"].insert(index, updated)
+        return jsonify({"name": updated.name,
+                        "proficiency": updated.proficiency,
+                        "logo": updated.logo,
+                        })
+    return jsonify({"Server Error": "Couldn't find needed skill"})

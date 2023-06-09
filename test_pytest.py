@@ -309,3 +309,31 @@ def test_edu_update():
                                   json=updated_example_education)
     response = app.test_client().get('/resume/education')
     assert response.json[item_id] == updated_example_education
+
+
+def test_skill_update():
+    '''
+    Update an existing skill and then get all skills. 
+    
+    Check that it returns the updated skill in that list
+    '''
+    example_skill = {
+    "name": "JavaScript",
+    "proficiency": "2-4 years",
+    "logo": "example-logo.png"
+    }
+
+    item_id = app.test_client().post('/resume/skill',
+                                    json=example_skill).json['id']
+
+    updated_example_skill = {
+    "name": "Python",
+    "proficiency": "8-10 years",
+    "logo": "example-logo.png"
+    }
+
+    params = {'index': item_id}
+    app.test_client().put('/resume/skill',query_string=params,
+                                json=updated_example_skill)
+    response = app.test_client().get('/resume/skill')
+    assert response.json[item_id] == updated_example_skill
