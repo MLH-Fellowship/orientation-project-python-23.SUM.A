@@ -176,7 +176,7 @@ def test_skill():
     assert response.json[item_id] == example_skill
 
     response = app.test_client().delete('/resume/skill', query_string={'index': item_id})
-    assert "Skill deleted" in response.json['Success']
+    assert response.status_code == 200
 
     incomplete_skill = {
         "name": "JavaScript",

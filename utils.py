@@ -57,8 +57,8 @@ def delete_skill_by_index(data, index):
     '''
     index = int(index)
     if 0 <= index < len(data["skill"]):
-        del data["skill"][index]
-        return jsonify({"Success": "Skill deleted"})
+        skill = data["skill"].pop(index)
+        return jsonify(skill)
     return jsonify({"Server Error": "Couldn't find needed skill"})
 
 
