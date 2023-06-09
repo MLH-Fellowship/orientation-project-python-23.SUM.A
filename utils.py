@@ -61,6 +61,7 @@ def validate_request(req, required_fields):
     if not isinstance(req, dict):
         return 400, "Request data is not valid JSON"
     if missing_fields:
+        print('Triggered')
         return 400, f"Missing fields: {', '.join(missing_fields)}"
 
     # Validate fields types

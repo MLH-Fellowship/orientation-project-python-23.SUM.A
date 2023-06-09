@@ -2,7 +2,8 @@
 Flask Application
 '''
 from flask import Flask, jsonify, request
-from flask_cors import CORS
+from flask_cors import CORS,cross_origin
+
 from models import Experience, Education, Skill
 from utils import (
     get_experience_by_index, get_education_by_index,
@@ -10,13 +11,24 @@ from utils import (
     validate_request, delete_education_by_index,
     update_education_by_index, update_skill_by_index
 )
+
+# TO DEVELOPER:
+# This project utilizes flas_cors.
+# A Flask extension for handling Cross Origin Resource Sharing (CORS),
+# making cross-origin AJAX possible.
+# This package has a simple philosophy: when you want to enable CORS,
+# you wish to enable it for all use cases on a domain.
+# This means no mucking around with different allowed headers, methods, etc.
+# Description provided by: https://flask-cors.readthedocs.io/en/latest/
+
 app = Flask(__name__)
+CORS(app)
 SERVER_ERROR = "Server Error"
 
  # CORS(app) Enables REST API receive http
  # requests without blocking/restricting
  # the request
-CORS(app)
+
 
 data = {
     "experience": [
@@ -42,6 +54,8 @@ data = {
     ]
 }
 
+
+
 @app.route('/')
 @app.route('/test')
 def hello_world():
@@ -51,7 +65,9 @@ def hello_world():
     return jsonify({"message": "Hello, World!"})
 
 
+
 @app.route('/resume/experience', methods=['GET', 'POST', 'PUT'])
+@cross_origin()
 def experience():
     '''
     Handles requests for experience. Determines what kind of request method 
@@ -129,7 +145,10 @@ def handle_put_experience():
 
     return jsonify({"Server Error": "Couldn't process method"})
 
+
 @app.route('/resume/education', methods=['GET', 'POST', 'DELETE', 'PUT'])
+@cross_origin()
+
 def education():
     '''
     Handles requests for education. If a GET request is called, will call 
@@ -214,6 +233,7 @@ def handle_put_education():
 
 
 @app.route('/resume/skill', methods=['GET', 'POST', 'PUT'])
+@cross_origin()
 def skill():
     '''
     Handles requests for skill. If a GET request is called, will call and return 
