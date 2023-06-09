@@ -334,7 +334,7 @@ def test_post_exp_spell_check():
         }
     ]
 
-    response = app.test_client().post('/resume/experience',
+    response = app.test_client().post('/resume/experience?corrections=yes',
                                      json=exp1).json
 
     assert len(response) == len(expected_corr)
@@ -353,7 +353,7 @@ def test_put_exp_spell_check():
         "description": "Writing Python Code",
         "logo": "example-logo.png"
     }
-    item_id = app.test_client().post('/resume/experience',
+    item_id = app.test_client().post('/resume/experience?corrections=yes',
                                      json=example_experience).json['id']
     updated_experience = {
         "title": "Mechanical Engineer",
@@ -363,7 +363,8 @@ def test_put_exp_spell_check():
         "description": "Maintenance Engineer",
         "logo": "example-logo2.png"
     }
-    response = app.test_client().put(f'/resume/experience?index={item_id}', json=updated_experience)
+    response = app.test_client().put(f'/resume/experience?index={item_id}&corrections=yes',
+                                     json=updated_experience)
 
     expected_corr = [
         {
@@ -394,7 +395,7 @@ def test_post_edu_spell_check():
         }
     ]
 
-    response = app.test_client().post('/resume/education',
+    response = app.test_client().post('/resume/education?corrections=yes',
                                      json=example_education).json
 
     assert len(response) == len(expected_corr)
@@ -421,7 +422,7 @@ def test_put_edu_spell_check():
         }
     ]
 
-    response = app.test_client().put('/resume/education',
+    response = app.test_client().put('/resume/education?corrections=yes',
                                      json=example_education).json
 
     assert len(response) == len(expected_corr)
@@ -445,7 +446,7 @@ def test_post_skill_spell_check():
         }
     ]
 
-    response = app.test_client().post('/resume/skill',
+    response = app.test_client().post('/resume/skill?corrections=yes',
                                      json=example_skill).json
 
     assert len(response) == len(expected_corr)
@@ -469,9 +470,29 @@ def test_put_skill_spell_check():
         }
     ]
 
-    response = app.test_client().put('/resume/skill',
+    response = app.test_client().put('/resume/skill?corrections=yes',
                                      json=example_skill).json
 
     assert len(response) == len(expected_corr)
     for expected in expected_corr:
         assert expected in response
+
+def test_spell_check_no_corrections():
+    '''
+    Check that spelling checker is not triggered when corrections isn't set to yes
+    '''
+    exp1 = {
+        "title": "Software Dveloper",
+        "company": "A Cooler Company",
+        "start_date": "Octber 2022",
+        "end_date": "Present",
+        "description": "Writing JavaScript Code",
+        "logo": "example-logo.png"
+    }
+
+    index = app.test_client().post('/resume/experience',
+                                     json=exp1).json['id']
+
+    # check if GET request with index gives the same JSON
+    response = app.test_client().get(f'/resume/experience?index={index}')
+    assert response.json == exp1
