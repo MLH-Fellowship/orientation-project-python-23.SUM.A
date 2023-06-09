@@ -90,9 +90,11 @@ def handle_post_experience():
 
     req = request.get_json()
 
-    corrections = spell_check(req)
-    if corrections:
-        return jsonify(corrections)
+    choice = request.args.get("corrections")
+    if choice == 'yes':
+        corrections = spell_check(req)
+        if corrections:
+            return jsonify(corrections)
 
     required_fields = {"title":"string", "company":"string", "start_date":"string" \
                            , "end_date":"string", "description":"string", "logo":"string"}
@@ -126,9 +128,11 @@ def handle_put_experience():
     if index is not None:
         req = request.get_json()
 
-        corrections = spell_check(req)
-        if corrections:
-            return jsonify(corrections)
+        choice = request.args.get("corrections")
+        if choice == 'yes':
+            corrections = spell_check(req)
+            if corrections:
+                return jsonify(corrections)
 
         existing_experience = get_experience_by_index(data, index)
         if SERVER_ERROR in existing_experience.json:
@@ -177,9 +181,11 @@ def handle_post_education():
     '''
     req = request.get_json()
 
-    corrections = spell_check(req)
-    if corrections:
-        return jsonify(corrections)
+    choice = request.args.get("corrections")
+    if choice == 'yes':
+        corrections = spell_check(req)
+        if corrections:
+            return jsonify(corrections)
 
     required_fields = {"school":"string", "start_date":"string", "end_date":"string" \
                         , "grade":"string", "logo":"string"}
@@ -214,9 +220,11 @@ def handle_put_education():
     '''
     req = request.get_json()
 
-    corrections = spell_check(req)
-    if corrections:
-        return jsonify(corrections)
+    choice = request.args.get("corrections")
+    if choice == 'yes':
+        corrections = spell_check(req)
+        if corrections:
+            return jsonify(corrections)
 
     updated = Education(req["course"],
         req["school"],
@@ -250,9 +258,11 @@ def skill():
     if request.method == 'PUT':
         req = request.get_json()
 
-        corrections = spell_check(req)
-        if corrections:
-            return jsonify(corrections)
+        choice = request.args.get("corrections")
+        if choice == 'yes':
+            corrections = spell_check(req)
+            if corrections:
+                return jsonify(corrections)
 
     return jsonify({"Server Error": "Couldn't process method"})
 
@@ -271,9 +281,11 @@ def handle_post_skill():
     '''
     req = request.get_json()
 
-    corrections = spell_check(req)
-    if corrections:
-        return jsonify(corrections)
+    choice = request.args.get("corrections")
+    if choice == 'yes':
+        corrections = spell_check(req)
+        if corrections:
+            return jsonify(corrections)
 
     required_fields = {"name":"string", "proficiency":"string", "logo":"string"}
 
