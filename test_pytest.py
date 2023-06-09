@@ -254,3 +254,89 @@ def test_editing_existing_experience_partially():
         "logo": "example-logo.png"
     }
     assert response.json == full_updated_experience
+
+
+def test_edu_delete():
+    '''
+    Delete a education and then get all educations. 
+    
+    Check that it deletes the new education in that list
+    '''
+    example_education = {
+        "course": "Engineering",
+        "school": "NYU",
+        "start_date": "October 2022",
+        "end_date": "August 2024",
+        "grade": "86%",
+        "logo": "example-logo.png"
+    }
+    intial_reponse = app.test_client().get('/resume/education')
+    item_id = app.test_client().post('/resume/education',
+                                     json=example_education).json['id']
+
+    params = {'index': item_id}
+    value = app.test_client().delete('/resume/education', query_string=params)
+    response = app.test_client().get('/resume/education')
+    assert value.status_code == 200
+    assert response.json == intial_reponse.json
+
+def test_edu_update():
+    '''
+    Update an existing education and then get all educations. 
+    
+    Check that it returns the updated education in that list
+    '''
+    example_education = {
+        "course": "Engineering",
+        "school": "NYU",
+        "start_date": "October 2022",
+        "end_date": "August 2024",
+        "grade": "86%",
+        "logo": "example-logo.png"
+    }
+
+    item_id = app.test_client().post('/resume/education',
+                                     json=example_education).json['id']
+
+    updated_example_education = {
+        "course": "Software Engineering",
+        "school": "NYU",
+        "start_date": "October 2022",
+        "end_date": "August 2024",
+        "grade": "86%",
+        "logo": "example-logo.png"
+    }
+
+    params = {'index': item_id}
+    app.test_client().put('/resume/education',query_string=params,
+                                  json=updated_example_education)
+    response = app.test_client().get('/resume/education')
+    assert response.json[item_id] == updated_example_education
+
+
+def test_skill_update():
+    '''
+    Update an existing skill and then get all skills. 
+    
+    Check that it returns the updated skill in that list
+    '''
+    example_skill = {
+    "name": "JavaScript",
+    "proficiency": "2-4 years",
+    "logo": "example-logo.png"
+    }
+
+    item_id = app.test_client().post('/resume/skill',
+                                    json=example_skill).json['id']
+
+    updated_example_skill = {
+    "name": "Python",
+    "proficiency": "8-10 years",
+    "logo": "example-logo.png"
+    }
+
+    params = {'index': item_id}
+    app.test_client().put('/resume/skill',query_string=params,
+                                json=updated_example_skill)
+    response = app.test_client().get('/resume/skill')
+    assert response.json[item_id] == updated_example_skill
