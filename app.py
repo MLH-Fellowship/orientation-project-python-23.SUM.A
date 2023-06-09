@@ -295,4 +295,3 @@ def handle_put_skill():
     if index is not None:
         return update_skill_by_index(data, index, updated)
     return jsonify(data["skill"])
-
