@@ -51,6 +51,16 @@ def get_skill_by_index(data, index):
                         })
     return jsonify({"Server Error": "Couldn't find needed skill"})
 
+def delete_skill_by_index(data, index):
+    '''
+    Delete specific skill by index or None if not found
+    '''
+    index = int(index)
+    if 0 <= index < len(data["skill"]):
+        skill = data["skill"].pop(index)
+        return jsonify(skill)
+    return jsonify({"Server Error": "Couldn't find needed skill"})
+
 
 def validate_request(req, required_fields):
     '''

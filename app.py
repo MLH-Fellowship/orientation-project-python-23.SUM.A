@@ -5,11 +5,17 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from models import Experience, Education, Skill
 from utils import (
-    get_experience_by_index, get_education_by_index,
-    get_skill_by_index, update_experience_by_index,
-    validate_request, delete_education_by_index,
-    update_education_by_index, update_skill_by_index
+    get_experience_by_index,
+    get_education_by_index,
+    get_skill_by_index,
+    delete_skill_by_index,
+    delete_education_by_index,
+    update_experience_by_index,
+    update_education_by_index,
+    update_skill_by_index,
+    validate_request
 )
+
 app = Flask(__name__)
 SERVER_ERROR = "Server Error"
 
@@ -213,7 +219,7 @@ def handle_put_education():
     return jsonify(data["education"])
 
 
-@app.route('/resume/skill', methods=['GET', 'POST', 'PUT'])
+@app.route('/resume/skill', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def skill():
     '''
     Handles requests for skill. If a GET request is called, will call and return 
@@ -231,6 +237,11 @@ def skill():
 
     if request.method == 'PUT':
         return handle_put_skill()
+
+    if request.method == 'DELETE':
+        index = request.args.get("index")
+        if index is not None:
+            return delete_skill_by_index(data, index)
 
     return jsonify({"Server Error": "Couldn't process method"})
 
