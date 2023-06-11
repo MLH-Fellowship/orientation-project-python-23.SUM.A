@@ -191,9 +191,10 @@ def handle_delete_education():
     Handle education delete requests
     '''
     index = request.args.get("index")
-    if index is not None:
-        return delete_education_by_index(data, index)
-    return jsonify(data["education"])
+    existing_education = get_education_by_index(data, index)
+    if SERVER_ERROR in existing_education.json:
+        return existing_education
+    return delete_education_by_index(data, index)
 
 def handle_put_education():
     '''
