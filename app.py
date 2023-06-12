@@ -1,14 +1,18 @@
 '''
 Flask Application
 '''
+
+import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import openai
 from models import Experience, Education, Skill
 from utils import (
     get_experience_by_index, get_education_by_index,
     get_skill_by_index, update_experience_by_index,
     validate_request, delete_education_by_index,
-    update_education_by_index, update_skill_by_index
+    update_education_by_index, update_skill_by_index,
+    generate_description
 )
 app = Flask(__name__)
 SERVER_ERROR = "Server Error"
@@ -17,6 +21,7 @@ SERVER_ERROR = "Server Error"
  # requests without blocking/restricting
  # the request
 CORS(app)
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 data = {
     "experience": [
@@ -90,6 +95,11 @@ def handle_post_experience():
 
     req = request.get_json()
 
+    generate = request.args.get("chatgpt")
+    if generate == "yes":
+        generated = generate_exp_description(req["description"])
+        return jsonify(generated)
+
     required_fields = {"title":"string", "company":"string", "start_date":"string" \
                            , "end_date":"string", "description":"string", "logo":"string"}
 
@@ -121,6 +131,13 @@ def handle_put_experience():
     index = request.args.get("index")
     if index is not None:
         req = request.get_json()
+
+        generate = request.args.get("chatgpt")
+        if "description" in req:
+            if generate == "yes":
+                generated = generate_exp_description(req["description"])
+                return jsonify(generated)
+
         existing_experience = get_experience_by_index(data, index)
         if SERVER_ERROR in existing_experience.json:
             # will return the server error returned by get_experience_by_index function
@@ -128,6 +145,21 @@ def handle_put_experience():
         return update_experience_by_index(data, index, req)
 
     return jsonify({"Server Error": "Couldn't process method"})
+
+def generate_exp_description(keyphrases):
+    '''
+    Generate description from the keyphrases in the job experience
+    '''
+    response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=generate_description(keyphrases),
+            max_tokens= 100,
+            temperature=0.6,
+        )
+    result=response.choices[0].text
+    return {
+        "description": result
+    }
 
 @app.route('/resume/education', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def education():

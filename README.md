@@ -18,6 +18,14 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+Make a copy of the example environment variables file:
+
+   ```bash
+   $ cp .env.example .env
+   ```
+
+Add your [API key](https://beta.openai.com/account/api-keys) to the newly created `.env` file.
+
 ## Run
 ```
 flask run

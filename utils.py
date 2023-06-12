@@ -139,3 +139,22 @@ def update_skill_by_index(data, index, updated):
                         "logo": updated.logo,
                         })
     return jsonify({"Server Error": "Couldn't find needed skill"})
+
+def generate_description(keyphrases):
+    '''
+    Generate a description from the keyphrases
+    '''
+    return f"""Write job experience description.
+
+Keyphrases: Wrote python code. worked on flask. wrote unit tests
+Description: 
+- Developed Python code and utilized the Flask framework for building robust web applications.\n\n
+- Wrote comprehensive unit tests to validate the functionality and integrity of the code.\n\n
+- Collaborated with the team to identify and implement efficient solutions, ensuring seamless user experiences.\n\n
+- Ensured adherence to coding standards and best practices, resulting in high-quality and maintainable code.\n\n
+- Actively participated in code reviews, providing valuable feedback and incorporating improvements as necessary.\n\n
+Keyphrases: writing python code.
+Description: 
+- Developed Python scripts and applications for a wide range of projects, utilizing object-oriented principles and best practices.\n\n
+Keyphrases: {keyphrases.capitalize()}
+Description:"""
